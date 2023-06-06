@@ -2,7 +2,7 @@ import { Ident } from "provide-js";
 import { Vault } from "provide-js";
 import { Axiom } from "provide-js";
 import { readFile } from "fs/promises";
-import { Axios } from "axios";
+
 
 console.log("begin carbon offset");
 
@@ -59,35 +59,42 @@ RETIREMENT_REQUEST_PARAMS.beneficiary_name  = "Provide ECO Test User";
 RETIREMENT_REQUEST_PARAMS.retirement_message  = "Provide ECO API - Node.js batch script example";
 
 var bearertoken = 'Bearer '+ACCESS_TOKEN.accessToken;
+const RETIREMENT_REQUEST = await fetch("https://api.providepayments.com/api/v1/eco/retire_carbon_requests", {
+        method: "POST",
+        headers: {'Authorization': bearertoken, 'Content-type': 'application/json'},
+        body: JSON.stringify(RETIREMENT_REQUEST_PARAMS),
+}); 
 
-const ECO_CARBONRETIRE_API_PROXY = new Axios({
-    baseURL: 'https://api.providepayments.com',
-    timeout: 2000,
-});
+const RETIREMENT_REQ_DATA_RESP = await RETIREMENT_REQUEST.json();
 
-const RETIREMENT_REQUEST = await ECO_CARBONRETIRE_API_PROXY.post('/api/v1/eco/retire_carbon_requests',RETIREMENT_REQUEST_PARAMS, {'Authorization': bearertoken, 'Content-type': 'application/json'});
-
-//const RETIREMENT_REQUEST = await axios.post('https://api.providepayments.com/api/v1/eco/retire_carbon_request', RETIREMENT_REQUEST_PARAMS,  {'Authorization': bearertoken, 'Content-type': 'application/json'});
-console.log(RETIREMENT_REQUEST);
-
-const HASHED_MESSAGE = RETIREMENT_REQUEST.hashed_data;
+const HASHED_MESSAGE = RETIREMENT_REQ_DATA_RESP.hashed_data;
 
 // sign the transaction
 const SIGNED_TXN = await VAULT_PROXY.signMessage(ECO_VAULT_ID, ECO_KEY_ID, HASHED_MESSAGE);
 
 // broadcast the transaction
+var RETIREMENT_BROADCAST_PARAMS = {};
+RETIREMENT_BROADCAST_PARAMS.data = RETIREMENT_REQ_DATA_RESP.data;
+RETIREMENT_BROADCAST_PARAMS.request_id = RETIREMENT_REQ_DATA_RESP.id;
+RETIREMENT_BROADCAST_PARAMS.signature = SIGNED_TXN.signature;
+RETIREMENT_BROADCAST_PARAMS.signer = ECO_WALLET_ADDRESS;
+console.log(RETIREMENT_BROADCAST_PARAMS)
 
-var RETIREMENT_BROADCAST = {};
-RETIREMENT_BROADCAST.data = RETIREMENT_REQUEST.data;
-RETIREMENT_BROADCAST.request_id = RETIREMENT_REQUEST.retirementreqid;
-RETIREMENT_BROADCAST.signature = SIGNED_TXN.signature;
-RETIREMENT_BROADCAST.signer = ECO_WALLET_ADDRESS;
+var retirement_req_url = 'https://api.providepayments.com/api/v1/eco/retire_carbon_requests/' + RETIREMENT_REQ_DATA_RESP.id + '/retire';
+console.log(retirement_req_url);
+const RETIREMENT_BROADCAST = await fetch(retirement_req_url, {
+        method: "POST",
+        headers: {'Authorization': bearertoken, 'Content-type': 'application/json'},
+        body: JSON.stringify(RETIREMENT_REQUEST_PARAMS),
+}); 
 
-var retirement_req_url = '/api/v1/eco/retire_carbon_requests/' + RETIREMENT_REQUEST.retirementreqid + '/retire';
+const RETIREMENT_BROADCAST_RESP = await RETIREMENT_BROADCAST.json();
+console.log(RETIREMENT_BROADCAST_RESP);
 
-const COMPLETED_RETIREMENT = await ECO_CARBONRETIRE_API_PROXY.post(retirement_req_url, RETIREMENT_BROADCAST);
 
-console.log(COMPLETED_RETIREMENT);
+//const COMPLETED_RETIREMENT = await ECO_CARBONRETIRE_API_PROXY.post(retirement_req_url, RETIREMENT_BROADCAST);
+
+//console.log(COMPLETED_RETIREMENT);
 
 
 
