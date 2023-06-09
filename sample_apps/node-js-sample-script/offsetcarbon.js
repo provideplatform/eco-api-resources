@@ -46,6 +46,9 @@ const ECO_WALLET_ADDRESS = ECO_WALLET[0].address;
 var SOURCE_TOKEN = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"; //Polygon USDC
 var POOL_TOKEN = "0x2f800db0fdb5223b3c3f354886d907a671414a7f"; //Toucan Protocol BCT - Polygon
 
+// specific retirements
+//var PROJECT_TOKEN = "0x04943c19896c776c78770429ec02c5384ee78292";
+
 // setup the retirement request
 
 var RETIREMENT_REQUEST_PARAMS = {};
@@ -78,45 +81,47 @@ RETIREMENT_BROADCAST_PARAMS.data = RETIREMENT_REQ_DATA_RESP.data;
 RETIREMENT_BROADCAST_PARAMS.request_id = RETIREMENT_REQ_DATA_RESP.id;
 RETIREMENT_BROADCAST_PARAMS.signature = SIGNED_TXN.signature;
 RETIREMENT_BROADCAST_PARAMS.signer = ECO_WALLET_ADDRESS;
-console.log(RETIREMENT_BROADCAST_PARAMS)
+console.log(JSON.stringify(RETIREMENT_REQUEST_PARAMS));
 
 var retirement_req_url = 'https://api.providepayments.com/api/v1/eco/retire_carbon_requests/' + RETIREMENT_REQ_DATA_RESP.id + '/retire';
 console.log(retirement_req_url);
 const RETIREMENT_BROADCAST = await fetch(retirement_req_url, {
         method: "POST",
         headers: {'Authorization': bearertoken, 'Content-type': 'application/json'},
-        body: JSON.stringify(RETIREMENT_REQUEST_PARAMS),
+        body: JSON.stringify(RETIREMENT_BROADCAST_PARAMS),
 }); 
 
 const RETIREMENT_BROADCAST_RESP = await RETIREMENT_BROADCAST.json();
 console.log(RETIREMENT_BROADCAST_RESP);
 
-
-//const COMPLETED_RETIREMENT = await ECO_CARBONRETIRE_API_PROXY.post(retirement_req_url, RETIREMENT_BROADCAST);
-
-//console.log(COMPLETED_RETIREMENT);
-
-
-
 //*******************// 
 // ZK PROOF          //
 //*******************//
-//var AXIOM_WORKGROUP = "";
-//var AXIOM_SUBJECTACCT = "";
-//var AXIOM_PROXY = new Axiom(ACCESS_TOKEN.accessToken);
+var AXIOM_WORKGROUP = user_params.workgroup_id;
+var AXIOM_SUBJECTACCT = user_params.subject_account_id;
+var AXIOM_PROXY = new Axiom(ACCESS_TOKEN.accessToken);
 
-//var EMISSIONS_DATA;
-//EMISSIONS_DATA.emission_id = "";
-//EMISSIONS_DATA.co2_amount = 0.1234;
-//EMISSIONS_DATA.co2_uom = "MT";
+var ATOMIC_OFFSET_DATA= {};
+ATOMIC_OFFSET_DATA.offset_co2_amount = 0.1234;
+ATOMIC_OFFSET_DATA.offset_co2_uom = "MT";
+ATOMIC_OFFSET_DATA.offset_co2_txnhash = RETIREMENT_BROADCAST_RESP.certificate_href;
+ATOMIC_OFFSET_DATA.offset_co2_networkid = RETIREMENT_BROADCAST_RESP.network_id;
+ATOMIC_OFFSET_DATA.emissions_co2_amount = 0.1234;
+ATOMIC_OFFSET_DATA.emissions_co2_uom = "MT";
+ATOMIC_OFFSET_DATA.emissions_co2_id = "450000000010";
+ATOMIC_OFFSET_DATA.emissions_co2_objtyp = "DummyPurchaseOrder";
+ATOMIC_OFFSET_DATA.emissions_co2_objsrc = "DummyERP";
+ATOMIC_OFFSET_DATA.offset_co2_id = RETIREMENT_BROADCAST_RESP.id;
+ATOMIC_OFFSET_DATA.aeo_id = RETIREMENT_BROADCAST_RESP.id + "|" + ATOMIC_OFFSET_DATA.emissions_co2_id + "|" + ATOMIC_OFFSET_DATA.emissions_co2_objtyp + "|" + ATOMIC_OFFSET_DATA.emissions_co2_objsrc;
 
-//var AXIOM_PROTOCOL_MSG;
-//AXIOM_PROTOCOL_MSG.id = "";
-//AXIOM_PROTOCOL_MSG.AtomicOffset = "";
-//AXIOM_PROTOCOL_MSG.subject_account_id = "";
-//AXIOM_PROTOCOL_MSG.workgroup_id = "";
-//AXIOM_PROTOCOL_MSG.payload = EMISSIONS_DATA;
+var AXIOM_PROTOCOL_MSG = {};
+AXIOM_PROTOCOL_MSG.id = ATOMIC_OFFSET_DATA.aeo_id;
+AXIOM_PROTOCOL_MSG.subject_account_id = AXIOM_SUBJECTACCT;
+AXIOM_PROTOCOL_MSG.workgroup_id = AXIOM_WORKGROUP;
+AXIOM_PROTOCOL_MSG.payload = ATOMIC_OFFSET_DATA;
 
-//const EMISSIONS_OFFSET_PROOF = AXIOM_PROXY.sendProtocolMessage(AXIOM_PROTOCOL_MSG);
+const ATOMIC_OFFSET_PROOF = await AXIOM_PROXY.sendProtocolMessage(AXIOM_PROTOCOL_MSG);
+console.log("Atomic Offset ZK proof: " );
+console.log(ATOMIC_OFFSET_PROOF);
 
 //console.log("end carbon offset");
