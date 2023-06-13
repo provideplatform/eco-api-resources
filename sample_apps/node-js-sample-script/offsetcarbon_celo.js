@@ -1,6 +1,5 @@
 import { Ident } from "provide-js";
 import { Vault } from "provide-js";
-import { Axiom } from "provide-js";
 import { readFile } from "fs/promises";
 
 
@@ -53,7 +52,7 @@ var POOL_TOKEN = "0x4c5f90C50Ca9F849bb75D93a393A4e1B6E68Accb"; //Toucan Protocol
 // setup the retirement request
 
 var RETIREMENT_REQUEST_PARAMS = {};
-RETIREMENT_REQUEST_PARAMS.network_id = "2fd61fde-5031-41f1-86b8-8a72e2945ead"; //PRVD stack chain id for Celo Alfajores testnet
+RETIREMENT_REQUEST_PARAMS.network_id = "d818afb9-df2f-4e46-963a-f7b6cb7655d2"; //PRVD stack chain id for Celo Alfajores testnet
 RETIREMENT_REQUEST_PARAMS.description = "Provide ECO - retirement via NodeJs script on Celo Alfajores";                
 RETIREMENT_REQUEST_PARAMS.value = 0.1234; //Amount of carbon you wish to retire
 RETIREMENT_REQUEST_PARAMS.source_token_contract_address  = SOURCE_TOKEN;
@@ -61,6 +60,7 @@ RETIREMENT_REQUEST_PARAMS.pool_token_contract_address  = POOL_TOKEN;
 RETIREMENT_REQUEST_PARAMS.beneficiary_address  = ECO_WALLET_ADDRESS;
 RETIREMENT_REQUEST_PARAMS.beneficiary_name  = "Provide ECO Test User";
 RETIREMENT_REQUEST_PARAMS.retirement_message  = "Provide ECO API - Node.js batch script example with CELO Alfajores";
+RETIREMENT_REQUEST_PARAMS.provider = "celo";
 
 var bearertoken = 'Bearer '+ACCESS_TOKEN.accessToken;
 const RETIREMENT_REQUEST = await fetch("https://api.providepayments.com/api/v1/eco/retire_carbon_requests", {
