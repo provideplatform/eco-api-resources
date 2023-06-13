@@ -96,5 +96,48 @@ console.log(RETIREMENT_BROADCAST_RESP);
 
 console.log("end carbon offset");
 
+//*******************// 
+// ZK PROOF          //
+//*******************//
+
+var AXIOM_WORKGROUP = user_params.workgroup_id;
+var AXIOM_SUBJECTACCT = user_params.subject_account_id;
+
+// do the proof of emissions offset - if specified
+if(AXIOM_WORKGROUP === "" && AXIOM_SUBJECTACCT === "") {
+        console.log("Optional: add workgroup_id and subject account id for emissions data proof");
+} else {
+        console.log("begin proof of atomic emissions offset");
+        var AXIOM_PROXY = new Axiom(ACCESS_TOKEN.accessToken);
+
+        var ATOMIC_OFFSET_DATA= {};
+        ATOMIC_OFFSET_DATA.offset_co2_amount = 0.1234;
+        ATOMIC_OFFSET_DATA.offset_co2_uom = "MT";
+        ATOMIC_OFFSET_DATA.offset_co2_txnhash = RETIREMENT_BROADCAST_RESP.certificate_href;
+        ATOMIC_OFFSET_DATA.offset_co2_networkid = RETIREMENT_BROADCAST_RESP.network_id;
+        ATOMIC_OFFSET_DATA.emissions_co2_amount = 0.1234;
+        ATOMIC_OFFSET_DATA.emissions_co2_uom = "MT";
+        ATOMIC_OFFSET_DATA.emissions_co2_id = "450000000010";
+        ATOMIC_OFFSET_DATA.emissions_co2_objtyp = "DummyPurchaseOrder";
+        ATOMIC_OFFSET_DATA.emissions_co2_objsrc = "DummyERP";
+        ATOMIC_OFFSET_DATA.offset_co2_id = RETIREMENT_BROADCAST_RESP.id;
+        ATOMIC_OFFSET_DATA.aeo_id = RETIREMENT_BROADCAST_RESP.id + "|" + ATOMIC_OFFSET_DATA.emissions_co2_id + "|" + ATOMIC_OFFSET_DATA.emissions_co2_objtyp + "|" + ATOMIC_OFFSET_DATA.emissions_co2_objsrc;
+        
+        console.log("Carbon emissions and offset to be used:");
+        console.log(ATOMIC_OFFSET_DATA);
+
+        var AXIOM_PROTOCOL_MSG = {};
+        AXIOM_PROTOCOL_MSG.id = ATOMIC_OFFSET_DATA.aeo_id;
+        AXIOM_PROTOCOL_MSG.type = "AtomicEmissionsOffset"; //use the name of the domain model of the Shuttle workflow
+        AXIOM_PROTOCOL_MSG.subject_account_id = AXIOM_SUBJECTACCT;
+        AXIOM_PROTOCOL_MSG.workgroup_id = AXIOM_WORKGROUP;
+        AXIOM_PROTOCOL_MSG.payload = ATOMIC_OFFSET_DATA;
+        
+        const ATOMIC_OFFSET_PROOF = await AXIOM_PROXY.sendProtocolMessage(AXIOM_PROTOCOL_MSG);
+        console.log("Atomic Offset ZK proof: " );
+        console.log(ATOMIC_OFFSET_PROOF);
+        console.log("end proof of atomic emissions offset");
+}
+
 
 
