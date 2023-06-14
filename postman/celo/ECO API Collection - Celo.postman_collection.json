@@ -1,0 +1,615 @@
+{
+	"info": {
+		"_postman_id": "fb3b54f2-3b81-4c26-bc56-ec77f1957448",
+		"name": "ECO API Collection - Celo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22975745"
+	},
+	"item": [
+		{
+			"name": "Prove Emissions",
+			"item": [
+				{
+					"name": "Prove Emissions Offset",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"63759861A48B3466C80A967FA1080964F9C4E378560CC23B7BECCD862C247483\",\r\n    \"type\": \"AtomicOffset\",\r\n    \"subject_account_id\" : \"c4147ee9ec0df275042e7a1635d2d7e912d70d73fe0534e7ff9d1d44e0e9243d\",\r\n    \"workgroup_id\": \"62590572-527d-4205-ad6c-2dd32b15094e\",\r\n    \"payload\": {\r\n        \"aggregate_id\" : \"AA|0017|20210918\",\r\n        \"retirement_id\" : \"095D52E14CFDF9455489453C6F7C5D90428331A3F92AB62EAB27F8C80C126B01\",\r\n        \"atomic_offset_id\" : \"63759861A48B3466C80A967FA1080964F9C4E378560CC23B7BECCD862C247483\",\r\n        \"object_type\" : \"SFLIGHT\",\r\n        \"object_key\" : \"AA|0017|20210918\",\r\n        \"sor_type\" : \"SAP\",\r\n        \"total_carbon_aggregate\" : 1.150000000,\r\n        \"carbon_uom\" : \"MT\",\r\n        \"network_id\" : \"4251b6fd-c98d-4017-87a3-d691a77a52a7\",\r\n        \"txn_hash\" : \"0x308354456d4a3d594a0dB0b154E1a52ed3312067\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://axiom.provide.services/api/v1/protocol_messages",
+							"protocol": "https",
+							"host": [
+								"axiom",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"protocol_messages"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get DID from Basic Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"console.log(response);",
+							"",
+							"//pm.collectionVariables.set(\"eco_refreshtoken\", response.token.refresh_token), (\"user_id\", response.user.id);",
+							"pm.collectionVariables.set(\"eco_accesstoken\", response.token.access_token);",
+							"pm.collectionVariables.set(\"eco_user_id\", response.user.id);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{shuttle_email}}\", \n    \"password\": \"{{shuttle_password}}\"\n}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/authenticate",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"authenticate"
+					]
+				},
+				"description": "Sends email & password to Ident. Token is retrieved and stored in environment variables as jwt_token"
+			},
+			"response": []
+		},
+		{
+			"name": "JWT Authenticate - Generate long-dated refresh token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"pm.collectionVariables.set(\"eco_refreshtoken\", response.refresh_token );"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"scope\": \"offline_access\",\n    \"organization_id\" : \"{{eco_organizationid}}\",\n    \"user_id\" : \"{{eco_user_id}}\"\n}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/tokens",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"tokens"
+					]
+				},
+				"description": "Returns an authorized JSON formatted JWT with an `offline-access` scoped long-term `access_token` that serves as authentication for `User`, `Organization`, and `Application` related requests. \n\nTo authorize an `Application` token, replace `organization_id` in this example with `application_id`\n\nTo authorize a `User` token, replace `organization_id` with `user_id`"
+			},
+			"response": []
+		},
+		{
+			"name": "JWT Authenticate - Get access token from refresh token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"pm.collectionVariables.set(\"eco_accesstoken\", response.access_token );"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_refreshtoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"organization_id\": \"{{eco_organizationid}}\",\n    \"user_id\" : \"{{eco_user_id}}\"\n}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/tokens",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"tokens"
+					]
+				},
+				"description": "Returns an authorized JSON formatted JWT with an `offline-access` scoped long-term `access_token` that serves as authentication for `User`, `Organization`, and `Application` related requests. \n\nTo authorize an `Application` token, replace `organization_id` in this example with `application_id`\n\nTo authorize a `User` token, replace `organization_id` with `user_id`"
+			},
+			"response": []
+		},
+		{
+			"name": "List Vaults",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.collectionVariables.set(\"eco_uservault_id\", response[0].id );"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "https://vault.provide.services/api/v1/vaults",
+					"protocol": "https",
+					"host": [
+						"vault",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"vaults"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Vault wallet details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"var key_id;\r",
+							"var wallet;\r",
+							"\r",
+							"var vaultkeys = response.filter( vaultkeys => vaultkeys.spec === \"secp256k1\" );\r",
+							"\r",
+							"key_id = vaultkeys[0].id;\r",
+							"wallet = vaultkeys[0].address;\r",
+							"\r",
+							"pm.collectionVariables.set(\"eco_uservault_key_id\", key_id );\r",
+							"pm.collectionVariables.set(\"eco_uservault_wallet\", wallet);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys",
+					"protocol": "https",
+					"host": [
+						"vault",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"vaults",
+						"{{eco_uservault_id}}",
+						"keys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Retirement Transaction Parameters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"var paramsdata;\r",
+							"var hashedparamsdata;\r",
+							"var retirementreqid;\r",
+							"\r",
+							"paramsdata = response.data;\r",
+							"hashedparamsdata = response.hashed_data;\r",
+							"retirementreqid = response.id;\r",
+							"\r",
+							"pm.collectionVariables.set(\"eco_paramsdata\", paramsdata );\r",
+							"pm.collectionVariables.set(\"eco_hashedparamsdata\", hashedparamsdata);\r",
+							"pm.collectionVariables.set(\"eco_retirereq_id\", retirementreqid);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"value\"   : 0.3333,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\",\r\n    \"provider\" : \"celo\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.providepayments.com/api/v1/eco/retire_carbon_requests",
+					"protocol": "https",
+					"host": [
+						"api",
+						"providepayments",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"eco",
+						"retire_carbon_requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign transaction with Vault",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"var signeddata;\r",
+							"\r",
+							"signeddata = response.signature;\r",
+							"\r",
+							"pm.collectionVariables.set(\"eco_signeddata\", signeddata);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"message\" : \"{{eco_hashedparamsdata}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys/{{eco_uservault_key_id}}/sign",
+					"protocol": "https",
+					"host": [
+						"vault",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"vaults",
+						"{{eco_uservault_id}}",
+						"keys",
+						"{{eco_uservault_key_id}}",
+						"sign"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Broadcast retirement transaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n           \"data\" : \"{{eco_paramsdata}}\",\r\n           \"request_id\" : \"{{eco_retirereq_id}}\",\r\n           \"signature\"  : \"{{eco_signeddata}}\",\r\n           \"signer\"    : \"{{eco_uservault_wallet}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.providepayments.com/api/v1/eco/retire_carbon_requests/{{eco_retirereq_id}}/retire",
+					"protocol": "https",
+					"host": [
+						"api",
+						"providepayments",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"eco",
+						"retire_carbon_requests",
+						"{{eco_retirereq_id}}",
+						"retire"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "eco_accesstoken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_refreshtoken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_uservault_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_uservault_key_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_retirereq_id",
+			"value": ""
+		},
+		{
+			"key": "eco_user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_organizationid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_uservault_wallet",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_retirement_msg",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_beneficiary",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_source_token",
+			"value": "0x55bD95969c9F5297688B6115f2b984e2daF0359e",
+			"type": "string"
+		},
+		{
+			"key": "eco_pool_token",
+			"value": "0xfb60a08855389F3c0A66b29aB9eFa911ed5cbCB5",
+			"type": "string"
+		},
+		{
+			"key": "eco_prvd_network_id",
+			"value": "d818afb9-df2f-4e46-963a-f7b6cb7655d2",
+			"type": "string"
+		},
+		{
+			"key": "eco_retirement_desc",
+			"value": "Provide ECO - Carbon Retirement on Celo",
+			"type": "string"
+		},
+		{
+			"key": "eco_paramsdata",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_hashedparamsdata",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_signeddata",
+			"value": ""
+		},
+		{
+			"key": "shuttle_email",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "shuttle_password",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
