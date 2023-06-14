@@ -1,14 +1,231 @@
 {
 	"info": {
-		"_postman_id": "69da0c31-1cf4-44db-ade7-7a66799f32e6",
-		"name": "ECO API Starter - Carbon Retirement with KlimaDAO Copy",
-		"description": "# ECO API Starter - Carbon Retirement with KlimaDAO\n\n### Pre-requisites\n\nCreate an account on [https://shuttle.provide.services.](https://shuttle.provide.services.)\n\nCheck out a video on how to do this here. Review step by step instructions here.\n\nMaintain the shuttle_email and shuttle_password collection variables for the account you set up in Shuttle accordingly\n\nMaintain the PRVD user id (eco_user_id) and PRVD organization variables (eco_organizationid). You can discover these while selecting your organization in Shuttle with the developer tools open.\n\n<img src=\"https://content.pstmn.io/faf265e8-c9e9-43ef-9542-6abc0c500eb5/aW1hZ2UucG5n\" width=\"1920\" height=\"510\">\n\nYou can also get the organization id from the list organizations endpoint\n\n### API Flow\n\nExecute each API request in the following order\n\n1. Get DID from Basic Auth\n2. List organizations\n3. Generate long-dated token\n4. Get Access token\n5. List Vaults\n6. Get Vault wallet details\n7. Generate Retirement Transaction Parameters\n8. Sign transaction with Vault\n9. Broadcast retirement transactions\n    \n\nThe additional collection variables needed will be populated as you successfully complete each HTTP request\n\nUpon completion of the final request - go to the link specified in the eco_cert_href collection variable.\n\nIt should be a link like this:\n\n[https://klimadao.finance/en/retirements/0x9ba09b7F79ccE9D45026DD02851dFaC948515b07/2](https://klimadao.finance/en/retirements/0x9ba09b7F79ccE9D45026DD02851dFaC948515b07/2)\n\nEndFragment\n\n### Variable Customization\n\nThis scenario defaults to using USDC to retire Toucan BCT on KlimaDAO/Polygon\n\nYou can try retiring from other carbon pools by changing the eco_pool_token variable to one of the following carbon offset tokens on Polygon\n\n| **Token** | **Address** |\n| --- | --- |\n| Toucan BCT (Base Carbon Tonne) | 0x2f800db0fdb5223b3c3f354886d907a671414a7f |\n| Toucan NCT (Nature-based Carbon Tonne) | 0xD838290e877E0188a4A44700463419ED96c16107 |\n| Moss MCO2 | 0x3aF556B48469D2398AB7BE1563a0cfd80ea4aC84 |\n| C3 UBO (Universal Base Offset) | See addresses listed [https://carbon.klimadao.finance/](https://carbon.klimadao.finance/nbo)ubo |\n| C3 NBO (Nature Base Offset) | See addresses listed [https://carbon.klimadao.finance/nbo](https://carbon.klimadao.finance/nboTroubleshooting) |\n\n### Troubleshooting tips\n\n- Use jwt.io to inspect refresh and access tokens (e.g. variables begin like ey1930...) for any authorization / authentication errors\n- Make sure the permissions attribute is set to 510 when generating the refresh token. If 0 or something else, double check the organization id and user id combination\n- For any authorization errors, check the access token in the authorization tab\n- Postman can goof up environment / collection variables. Make sure correct values are populated\n- Unable to sign the transaction? Your user may be missing the secp256k1 key. Try creating a new Shuttle user (especially if your shuttle account is old!)",
+		"_postman_id": "23a90ffb-bfd3-4025-bbca-474ab0918a20",
+		"name": "ECO API Starter - Carbon Retirement with KlimaDAO",
+		"description": "# ECO API Starter - Carbon Retirement with KlimaDAO\n\n### Pre-requisites\n\nCreate an account on [https://shuttle.provide.services.](https://shuttle.provide.services.)\n\nCheck out a video on how to do this here. Review step by step instructions here.\n\nMaintain the shuttle_email and shuttle_password collection variables for the account you set up in Shuttle accordingly\n\nMaintain the PRVD user id (eco_user_id) and PRVD organization variables (eco_organizationid). You can discover these while selecting your organization in Shuttle with the developer tools open.\n\n<img src=\"https://content.pstmn.io/faf265e8-c9e9-43ef-9542-6abc0c500eb5/aW1hZ2UucG5n\" width=\"1920\" height=\"510\">\n\nYou can also get the organization id from the list organizations endpoint\n\n### API Flow\n\nExecute each API request in the following order\n\n1. Authorize Access Token via Basic Auth\n2. List organizations\n3. Generate long-dated token\n4. Get Access token\n5. List Vaults\n6. Get Vault wallet details\n7. Generate Retirement Transaction Parameters\n8. Sign transaction with Vault\n9. Broadcast retirement transactions\n    \n\nThe additional collection variables needed will be populated as you successfully complete each HTTP request\n\nUpon completion of the final request - go to the link specified in the eco_cert_href collection variable.\n\nIt should be a link like this:\n\n[https://klimadao.finance/en/retirements/0x9ba09b7F79ccE9D45026DD02851dFaC948515b07/2](https://klimadao.finance/en/retirements/0x9ba09b7F79ccE9D45026DD02851dFaC948515b07/2)\n\nEndFragment\n\n### Variable Customization\n\nThis scenario defaults to using USDC to retire Toucan BCT on KlimaDAO/Polygon\n\nYou can try retiring from other carbon pools by changing the eco_pool_token variable to one of the following carbon offset tokens on Polygon\n\n| **Token** | **Address** |\n| --- | --- |\n| Toucan BCT (Base Carbon Tonne) | 0x2f800db0fdb5223b3c3f354886d907a671414a7f |\n| Toucan NCT (Nature-based Carbon Tonne) | 0xD838290e877E0188a4A44700463419ED96c16107 |\n| Moss MCO2 | 0x3aF556B48469D2398AB7BE1563a0cfd80ea4aC84 |\n| C3 UBO (Universal Base Offset) | See addresses listed [https://carbon.klimadao.finance/](https://carbon.klimadao.finance/nbo)ubo |\n| C3 NBO (Nature Base Offset) | See addresses listed [https://carbon.klimadao.finance/nbo](https://carbon.klimadao.finance/nboTroubleshooting) |\n\n### Troubleshooting tips\n\n- Use jwt.io to inspect refresh and access tokens (e.g. variables begin like ey1930...) for any authorization / authentication errors\n- Make sure the permissions attribute is set to 510 when generating the refresh token. If 0 or something else, double check the organization id and user id combination\n- For any authorization errors, check the access token in the authorization tab\n- Postman can goof up environment / collection variables. Make sure correct values are populated\n- Unable to sign the transaction? Your user may be missing the secp256k1 key. Try creating a new Shuttle user (especially if your shuttle account is old!)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22975745"
 	},
 	"item": [
 		{
-			"name": "Get DID from Basic Auth",
+			"name": "Retire By Specific Carbon Project",
+			"item": [
+				{
+					"name": "Generate Retirement Transaction Parameters - Specific Carbon Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"var paramsdata;\r",
+									"var hashedparamsdata;\r",
+									"var retirementreqid;\r",
+									"\r",
+									"paramsdata = response.data;\r",
+									"hashedparamsdata = response.hashed_data;\r",
+									"retirementreqid = response.retirementreqid;\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_paramsdata\", paramsdata );\r",
+									"pm.collectionVariables.set(\"eco_hashedparamsdata\", hashedparamsdata);\r",
+									"pm.collectionVariables.set(\"eco_retirereq_id\", retirementreqid);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"value\"   : 0.1233,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"project_token_contract_address\" : \"{{eco_project_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.providepayments.com/api/v1/eco/retire_carbon_requests",
+							"protocol": "https",
+							"host": [
+								"api",
+								"providepayments",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"eco",
+								"retire_carbon_requests"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Retire By Given Dollar Amount",
+			"item": [
+				{
+					"name": "Generate Retirement Transaction Parameters - By Dollar Amount $1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"var paramsdata;\r",
+									"var hashedparamsdata;\r",
+									"var retirementreqid;\r",
+									"\r",
+									"paramsdata = response.data;\r",
+									"hashedparamsdata = response.hashed_data;\r",
+									"retirementreqid = response.retirementreqid;\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_paramsdata\", paramsdata );\r",
+									"pm.collectionVariables.set(\"eco_hashedparamsdata\", hashedparamsdata);\r",
+									"pm.collectionVariables.set(\"eco_retirereq_id\", retirementreqid);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"source_value\"   : 1.00,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.providepayments.com/api/v1/eco/retire_carbon_requests",
+							"protocol": "https",
+							"host": [
+								"api",
+								"providepayments",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"eco",
+								"retire_carbon_requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Retirement Transaction Parameters - By Dollar Amount $1 in Specific Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"var paramsdata;\r",
+									"var hashedparamsdata;\r",
+									"var retirementreqid;\r",
+									"\r",
+									"paramsdata = response.data;\r",
+									"hashedparamsdata = response.hashed_data;\r",
+									"retirementreqid = response.retirementreqid;\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_paramsdata\", paramsdata );\r",
+									"pm.collectionVariables.set(\"eco_hashedparamsdata\", hashedparamsdata);\r",
+									"pm.collectionVariables.set(\"eco_retirereq_id\", retirementreqid);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"source_value\"   : 1.00,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.providepayments.com/api/v1/eco/retire_carbon_requests",
+							"protocol": "https",
+							"host": [
+								"api",
+								"providepayments",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"eco",
+								"retire_carbon_requests"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authorize Access Token",
 			"event": [
 				{
 					"listen": "test",
@@ -65,70 +282,6 @@
 					]
 				},
 				"description": "Sends email & password to Ident. Token is retrieved and stored in environment variables as jwt_token"
-			},
-			"response": []
-		},
-		{
-			"name": "List organizations",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"const response = pm.response.json();\r",
-							"pm.collectionVariables.set(\"eco_organizationid\", response[0].id);\r",
-							"\r",
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{eco_accesstoken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "content-type",
-						"value": "application/json"
-					},
-					{
-						"key": "authorization",
-						"value": "bearer {{jwt_token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{}"
-				},
-				"url": {
-					"raw": "https://ident.provide.services/api/v1/organizations",
-					"protocol": "https",
-					"host": [
-						"ident",
-						"provide",
-						"services"
-					],
-					"path": [
-						"api",
-						"v1",
-						"organizations"
-					]
-				}
 			},
 			"response": []
 		},
@@ -406,7 +559,7 @@
 							"\r",
 							"paramsdata = response.data;\r",
 							"hashedparamsdata = response.hashed_data;\r",
-							"retirementreqid = response.retirementreqid;\r",
+							"retirementreqid = response.id;\r",
 							"\r",
 							"pm.collectionVariables.set(\"eco_paramsdata\", paramsdata );\r",
 							"pm.collectionVariables.set(\"eco_hashedparamsdata\", hashedparamsdata);\r",
@@ -635,7 +788,7 @@
 		},
 		{
 			"key": "eco_retirereq_id",
-			"value": "1"
+			"value": ""
 		},
 		{
 			"key": "eco_user_id",
