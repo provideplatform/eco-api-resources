@@ -1,0 +1,689 @@
+{
+	"info": {
+		"_postman_id": "31eaee26-efaa-42e3-9f8e-77f3d689549a",
+		"name": "ECO API - User signup",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22975745"
+	},
+	"item": [
+		{
+			"name": "Create user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var randomInt = Math.random();\r",
+							"\r",
+							"var email = pm.collectionVariables.get(\"eco_signup_email\");\r",
+							"\r",
+							"if (email === \"\") {\r",
+							"    var fname = pm.collectionVariables.get(\"eco_signup_firstname\");\r",
+							"    var lname = pm.collectionVariables.get(\"eco_signup_lastname\");\r",
+							"    var randomid = Math.floor(Math.random() * 99999);\r",
+							"    var newemail = fname + \".\" + lname + randomid+ \"@fakemail.com\";\r",
+							"    var email = pm.collectionVariables.set(\"eco_signup_email\", newemail);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token_application}}"
+					},
+					{
+						"key": "name",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"{{eco_signup_email}}\",\n    \"first_name\":\"{{eco_signup_firstname}}\",\n    \"last_name\":\"{{eco_signup_lastname}}\",\n    \"password\" : \"{{eco_signup_password}}\"\n}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/users",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				},
+				"description": "To create a virtual user, ensure no `Password` is provided."
+			},
+			"response": []
+		},
+		{
+			"name": "Login with basic auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"console.log(response);",
+							"",
+							"//pm.collectionVariables.set(\"eco_refreshtoken\", response.token.refresh_token), (\"user_id\", response.user.id);",
+							"pm.collectionVariables.set(\"eco_signup_temp_accesstoken\", response.token.access_token), (\"eco_signup_userid\", response.user.id);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{eco_signup_email}}\", \n    \"password\": \"{{eco_signup_password}}\"\n}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/authenticate",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"authenticate"
+					]
+				},
+				"description": "Sends email & password to Ident. Token is retrieved and stored in environment variables as jwt_token"
+			},
+			"response": []
+		},
+		{
+			"name": "Create organization",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"pm.collectionVariables.set(\"eco_signup_orgid\", response.id);",
+							"pm.collectionVariables.set(\"eco_signup_userid\", response.user_id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_signup_session_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					},
+					{
+						"key": "name",
+						"value": "{{name}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{eco_signup_orgname}}\",\n    \"description\": \"{{eco_signup_orgdesc}}\"\n\n}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/organizations",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"organizations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get session access token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"pm.collectionVariables.set(\"eco_signup_session_accesstoken\", response.access_token );"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_signup_temp_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"organization_id\": \"{{eco_signup_orgid}}\",\n    \"user_id\" : \"{{eco_signup_userid}}\"\n}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/tokens",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"tokens"
+					]
+				},
+				"description": "Returns an authorized JSON formatted JWT with an `offline-access` scoped long-term `access_token` that serves as authentication for `User`, `Organization`, and `Application` related requests. \n\nTo authorize an `Application` token, replace `organization_id` in this example with `application_id`\n\nTo authorize a `User` token, replace `organization_id` with `user_id`"
+			},
+			"response": []
+		},
+		{
+			"name": "List Vaults",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.collectionVariables.set(\"eco_uservault_id\", response[0].id );"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_signup_session_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "https://vault.provide.services/api/v1/vaults",
+					"protocol": "https",
+					"host": [
+						"vault",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"vaults"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Vault wallet details Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"var key_id;\r",
+							"var wallet;\r",
+							"\r",
+							"var vaultkeys = response.filter( vaultkeys => vaultkeys.spec === \"secp256k1\" );\r",
+							"\r",
+							"key_id = vaultkeys[0].id;\r",
+							"wallet = vaultkeys[0].address;\r",
+							"\r",
+							"//pm.collectionVariables.set(\"eco_uservault_key_id\", key_id );\r",
+							"pm.collectionVariables.set(\"eco_signup_user_wallet\", wallet);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_signup_session_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys",
+					"protocol": "https",
+					"host": [
+						"vault",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"vaults",
+						"{{eco_uservault_id}}",
+						"keys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create vault",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.collectionVariables.set(\"eco_signup_vaultid\", response.id );"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_signup_session_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"{{eco_signup_orgname}}  vault\",\n    \"description\" : \"{{eco_signup_orgname}} vault for Carbonmark\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://vault.provide.services/api/v1/vaults",
+					"protocol": "https",
+					"host": [
+						"vault",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"vaults"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a key: secp256k1 Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_signup_session_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n      \"type\": \"asymmetric\",\n      \"usage\": \"sign/verify\",\n      \"spec\": \"RSA-2048\",\n      \"name\": \"rsa key #1\",\n      \"description\": \"JWT Signing Key #1\"\n    }"
+				},
+				"url": {
+					"raw": "https://vault.provide.services/api/v1/vaults/{{eco_signup_vaultid}}/keys",
+					"protocol": "https",
+					"host": [
+						"vault",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"vaults",
+						"{{eco_signup_vaultid}}",
+						"keys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a key: AES-256-GCM Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_signup_session_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n      \"type\": \"symmetric\",\n      \"usage\": \"encrypt/decrypt\",\n      \"spec\": \"AES-256-GCM\",\n      \"name\": \"encryption key #1\",\n      \"description\": \"AES encryption key\"\n    }"
+				},
+				"url": {
+					"raw": "https://vault.provide.services/api/v1/vaults/{{eco_signup_vaultid}}/keys",
+					"protocol": "https",
+					"host": [
+						"vault",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"vaults",
+						"{{eco_signup_vaultid}}",
+						"keys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a key: Baby Jubjub Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_signup_session_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n      \"type\": \"asymmetric\",\n      \"usage\": \"sign/verify\",\n      \"spec\": \"babyJubJub\",\n      \"name\": \"babyjubjub key #1\",\n      \"description\": \"babyjubjub key\"\n    }"
+				},
+				"url": {
+					"raw": "https://vault.provide.services/api/v1/vaults/{{eco_signup_vaultid}}/keys",
+					"protocol": "https",
+					"host": [
+						"vault",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"vaults",
+						"{{eco_signup_vaultid}}",
+						"keys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a key: RSA-4096 Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_signup_session_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n      \"type\": \"asymmetric\",\n      \"usage\": \"sign/verify\",\n      \"spec\": \"RSA-4096\",\n      \"name\": \"rsa key #1\",\n      \"description\": \"JWT Signing Key #1\"\n    }"
+				},
+				"url": {
+					"raw": "https://vault.provide.services/api/v1/vaults/{{eco_signup_vaultid}}/keys",
+					"protocol": "https",
+					"host": [
+						"vault",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"vaults",
+						"{{eco_signup_vaultid}}",
+						"keys"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "eco_signup_firstname",
+			"value": "ECO",
+			"type": "string"
+		},
+		{
+			"key": "eco_signup_lastname",
+			"value": "Test",
+			"type": "string"
+		},
+		{
+			"key": "eco_signup_email",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_signup_password",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_signup_temp_accesstoken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_signup_orgname",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_signup_orgdesc",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_signup_session_accesstoken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_signup_vaultid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_signup_orgid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_signup_userid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_uservault_id",
+			"value": ""
+		}
+	]
+}

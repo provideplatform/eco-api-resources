@@ -2,34 +2,49 @@
 
 ## About
 
-The Provide ECO API simplifies and accelerates the way in which companies integrate sustainability into their applications and core business processes. This repo outlines resources to assist in your use of the ECO API for acquiring/retiring carbon offsets and verifying scope 3 carbon emissions data through zero knowledge proofs
+The Provide ECO API simplifies and accelerates the way in which companies integrate sustainability into their applications and core business processes. This repo outlines resources to assist in your use of the ECO API for acquiring/retiring carbon offsets and verifying scope 3 carbon emissions data through digital proofs
 
 ## Getting Started
 
-### Set up your self-sovereign identity, API credentials through Provide Shuttle (Pre-req)
+### Set up your API credentials (Pre req)
 
-The ECO API relies upon the creation of a self-sovereign identity (e.g. a decentralized identity aka "DID") to serve as the common set of API credentials. 
+Use Provide Ident decentralized id and Provide Vault wallet-as-a-service to create a simple to use API credentials for your ECO API integrations
 
-Never used self-sovereign identity / DIDs before? Don't sweat it. The process to create and integrate one is very simple. Check out this video to learn how to use Provide Shuttle to generate your DID. Once completed, you're ready for your first carbon retirement!.
+Several methods to set your credentials are avaiable
 
-### Execute an on-demand carbon retirement on KlimaDAO, Polygon via Postman
+| Sign up method | Link |
+| -------------- | ---- |
+| Carbonmark     | Coming soon |
+| Postman | [Click Here](./postman/ECO%20API%20-%20User%20signup.postman_collection.json) |
+| Shuttle | [Click Here](./auth/eco-api-shuttle-onboarding.md) |
+| PRVD CLI | Coming soon |
 
-Ready to start retiring carbon on-demand? After creating your DID - you can complete your first carbon retirement through the ECO API Postman starter kit. Execute each Postman request in order. 
 
-Download and try the Provide ECO API Postman Starter Kit - Carbon Retirement with KlimaDAO [here](./postman/ECO%20API%20Starter%20-%20Carbon%20Retirement%20with%20KlimaDAO%20Copy.postman_collection.json)
+### Execute an on-demand carbon retirement on Carbonmark, Polygon Network via Postman
 
-### Generate and verify a carbon emissions proof, NFT
+Ready to start retiring carbon on-demand? After creating your API credentials - you can complete your first carbon retirement through the ECO API Postman starter kit. 
 
-More info to come soon
+Download and try the Provide ECO API Postman Starter Kit - Carbon Retirement with Carbonmark [here](./postman/ECO%20API%20Starter%20-%20Carbon%20Retirement%20with%20Carbonmark.postman_collection.json)
+
+### Execute an on-demand carbon retirement on Carbonmark, Polygon Network via Node.js
+
+Looking for a code sample to bootstrap your integration? Check out the [Node.js sample script](./sample_apps/node-js-sample-script/offsetcarbon.js)
+
+### Verify carbon emissions with digital proofs
+
+Explore how Provide Shuttle can help you create powerfully precise and privacy preserving carbon emissions through the power of zero-knowledge cryptography. Learn more about how this technique can help verify scope 3 emissions anywhere while protecting business data. More details soon!
+
+### Other
+- SAP Demo apps are documented [here](./sample_apps/sap/sapreadme.md)
+- Integration to the Celo blockchain is currently in preview. Check out the [Postman collection](./postman/celo/ECO%20API%20Collection%20-%20Celo.postman_collection.json) and [sample Node.js script](./sample_apps/node-js-sample-script/offsetcarbon_celo.js)
 
 ## Repo structure
 
 This repo contains several directories for your support
+- auth : Explains the ECO API authentication including usage of access tokens, api keys, digital wallets, and decentralized identity (DIDs)
 - postman : Provides an easy to use Postman collection to introduce the ECO API
 - api_spec : OpenAPI / Swagger docs for the ECO API for kickstarting your integration
 - sample_apps : Gallery of open source applications that use the ECO API
-- did_setup : Explains more general details about decentralized identity (e.g. DIDs) and their importance to ECO API and other apps
-- shuttle : Summarizes the use of the Provide Shuttle no-code designer as the default ECO API enablement tool
 - billing_setup : Documents some high-level details on how / where billing occurs for the Provide ECO API
 
 ## API availability, commercial support
