@@ -43,20 +43,21 @@ const ECO_WALLET_ADDRESS = ECO_WALLET[0].address;
 var SOURCE_TOKEN = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"; //Polygon USDC
 var POOL_TOKEN = "0x2f800db0fdb5223b3c3f354886d907a671414a7f"; //Toucan Protocol BCT - Polygon
 
-// specific retirements
-//var PROJECT_TOKEN = "0x04943c19896c776c78770429ec02c5384ee78292";
+// specific retirements - see matching projects https://carbon.klimadao.finance/bct
+//var PROJECT_TOKEN = "0x0327d60e458421cc25926195cf705922de42593c";
 
 // setup the retirement request
 
 var RETIREMENT_REQUEST_PARAMS = {};
 RETIREMENT_REQUEST_PARAMS.network_id = "2fd61fde-5031-41f1-86b8-8a72e2945ead"; //PRVD stack chain id for Polygon
 RETIREMENT_REQUEST_PARAMS.description = "Provide ECO - retirement via NodeJs script";                
-RETIREMENT_REQUEST_PARAMS.value = 0.01234; //Amount of carbon you wish to retire
+RETIREMENT_REQUEST_PARAMS.value = 0.07; //Retiring 5 cents USD of carbon
 RETIREMENT_REQUEST_PARAMS.source_token_contract_address  = SOURCE_TOKEN;
 RETIREMENT_REQUEST_PARAMS.pool_token_contract_address  = POOL_TOKEN;
 RETIREMENT_REQUEST_PARAMS.beneficiary_address  = ECO_WALLET_ADDRESS;
 RETIREMENT_REQUEST_PARAMS.beneficiary_name  = "Provide ECO Test User";
 RETIREMENT_REQUEST_PARAMS.retirement_message  = "Provide ECO API - Node.js batch script example";
+RETIREMENT_REQUEST_PARAMS.retire_by = "source"; //dictates to the API to retire by amount in source token (e.g. USDC)
 
 var bearertoken = 'Bearer '+ACCESS_TOKEN.accessToken;
 const RETIREMENT_REQUEST = await fetch("https://api.providepayments.com/api/v1/eco/retire_carbon_requests", {
