@@ -57,8 +57,8 @@ RETIREMENT_REQUEST_PARAMS.source_token_contract_address  = SOURCE_TOKEN;
 RETIREMENT_REQUEST_PARAMS.pool_token_contract_address  = POOL_TOKEN;
 RETIREMENT_REQUEST_PARAMS.project_token_contract_address = PROJECT_TOKEN;
 RETIREMENT_REQUEST_PARAMS.beneficiary_address  = ECO_WALLET_ADDRESS;
-RETIREMENT_REQUEST_PARAMS.beneficiary_name  = "Provide ECO Test User";
-RETIREMENT_REQUEST_PARAMS.retirement_message  = "Provide ECO API - Node.js batch script example with specific project VCS-1577";
+RETIREMENT_REQUEST_PARAMS.beneficiary_name  = "Carbonmark API Test User";
+RETIREMENT_REQUEST_PARAMS.retirement_message  = "Carbonmark API - Node.js batch script example with specific project VCS-1577";
 RETIREMENT_REQUEST_PARAMS.retire_by = "carbon";
 console.log(JSON.stringify(RETIREMENT_REQUEST_PARAMS));
 
