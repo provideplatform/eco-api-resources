@@ -1,3 +1,4 @@
 node_modules
 env
 ./sample_apps/node-js-sample-script/env/prvduser.json
+.env
