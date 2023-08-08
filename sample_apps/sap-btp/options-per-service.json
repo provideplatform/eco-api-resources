@@ -1,0 +1,7 @@
+{
+  "edmx/OP_API_INBOUND_DELIVERY_SRV_0002.edmx": {
+    "packageName": "op_api_inbound_delivery_srv_0002",
+    "directoryName": "OP_API_INBOUND_DELIVERY_SRV_0002",
+    "basePath": "/sap/opu/odata/sap/API_INBOUND_DELIVERY_SRV;v=0002"
+  }
+}

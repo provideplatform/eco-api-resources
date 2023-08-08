@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+        <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="ProductFootprintsService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="ProductFootprints" EntityType="ProductFootprintsService.ProductFootprints"/>
+            </EntityContainer>
+            <EntityType Name="ProductFootprints">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="CalculatedMonth" Type="Edm.Int32"/>
+                <Property Name="CalculatedYear" Type="Edm.Int32"/>
+                <Property Name="CalculationRunTimestamp" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="FootprintInventory" Type="Edm.String" MaxLength="60"/>
+                <Property Name="FootprintInventoryName" Type="Edm.String"/>
+                <Property Name="FootprintInventoryType" Type="Edm.String" MaxLength="2"/>
+                <Property Name="FootprintInventoryTypeName" Type="Edm.String" MaxLength="255"/>
+                <Property Name="Product" Type="Edm.String" MaxLength="60"/>
+                <Property Name="ProductName" Type="Edm.String"/>
+                <Property Name="Plant" Type="Edm.String" MaxLength="60"/>
+                <Property Name="PlantName" Type="Edm.String"/>
+                <Property Name="TotalCO2eQuantity" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="TotalCO2eQuantityUoM" Type="Edm.String" MaxLength="3"/>
+                <Property Name="TotalCO2eQuantityUoMName" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="CalculatedStatus" Type="Edm.String" MaxLength="2"/>
+                <Property Name="CalculatedStatusName" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ProductQuantity" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="ProductQuantityUoM" Type="Edm.String" MaxLength="3"/>
+                <Property Name="ProductQuantityUoMName" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="CO2ePerUnitQuantity" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="CO2ePerUnitQuantityUoM" Type="Edm.String" MaxLength="3"/>
+                <Property Name="CO2ePerUnitQuantityUoMName" Type="Edm.String" MaxLength="1000"/>
+            </EntityType>
+            <Annotations Target="ProductFootprintsService.EntityContainer/ProductFootprints">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record Type="Capabilities.DeleteRestrictionsType">
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record Type="Capabilities.InsertRestrictionsType">
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record Type="Capabilities.UpdateRestrictionsType">
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ProductFootprintsService.ProductFootprints/FootprintInventoryType">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

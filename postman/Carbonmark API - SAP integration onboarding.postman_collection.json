@@ -1,0 +1,600 @@
+{
+	"info": {
+		"_postman_id": "a0c0bbaa-7c85-4277-b30a-137b6e66ba1d",
+		"name": "Carbonmark API : SAP integration onboarding",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22975745"
+	},
+	"item": [
+		{
+			"name": "SAP Onboarding",
+			"item": [
+				{
+					"name": "Authorize Access Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"console.log(response);",
+									"",
+									"//pm.collectionVariables.set(\"eco_refreshtoken\", response.token.refresh_token), (\"user_id\", response.user.id);",
+									"pm.collectionVariables.set(\"eco_accesstoken\", response.token.access_token);",
+									"pm.collectionVariables.set(\"eco_user_id\", response.user.id);",
+									"",
+									"pm.test(\"Permissions are 415\", function () {",
+									"    pm.expect(response.token.permissions).to.eql(415);",
+									"});",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{shuttle_email}}\", \n    \"password\": \"{{shuttle_password}}\"\n}"
+						},
+						"url": {
+							"raw": "https://ident.provide.services/api/v1/authenticate",
+							"protocol": "https",
+							"host": [
+								"ident",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authenticate"
+							]
+						},
+						"description": "Sends email & password to Ident. Token is retrieved and stored in environment variables as jwt_token"
+					},
+					"response": []
+				},
+				{
+					"name": "List organizations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_organizationid\", response[0].id );\r",
+									"\r",
+									"var org_workgroups = response[0].metadata.workgroups;\r",
+									"\r",
+									"var workgroup_id = \"\";\r",
+									"\r",
+									"for (const wg in org_workgroups) {\r",
+									"  workgroup_id = wg;\r",
+									"  console.log(\"Subject account id for workgroup \" + wg);\r",
+									"  // org +wg\r",
+									"  var subjaccount_dna = response[0].id + \".\" + wg;\r",
+									"  var subjaccount = CryptoJS.SHA256(subjaccount_dna).toString();\r",
+									"  console.log(subjaccount);\r",
+									"  //break;\r",
+									"}\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_workgroupid\",workgroup_id);\r",
+									"\r",
+									"var user_id = pm.collectionVariables.get(\"eco_user_id\");\r",
+									"\r",
+									"var subjaccount_dna = workgroup_id + \".\" + user_id;\r",
+									"\r",
+									"var subjaccount = CryptoJS.AES.encrypt(subjaccount_dna, '').toString();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "https://ident.provide.services/api/v1/organizations",
+							"protocol": "https",
+							"host": [
+								"ident",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"organizations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "JWT Authenticate - Generate long-dated refresh token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.collectionVariables.set(\"bankshield_refreshtoken\", response.refresh_token );",
+									"",
+									"pm.test(\"Permissions are 510\", function () {",
+									"    pm.expect(response.permissions).to.eql(510);",
+									"});",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"scope\": \"offline_access\",\n    \"organization_id\" : \"{{eco_organizationid}}\",\n    \"user_id\" : \"{{eco_user_id}}\"\n}"
+						},
+						"url": {
+							"raw": "https://ident.provide.services/api/v1/tokens",
+							"protocol": "https",
+							"host": [
+								"ident",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tokens"
+							]
+						},
+						"description": "Returns an authorized JSON formatted JWT with an `offline-access` scoped long-term `access_token` that serves as authentication for `User`, `Organization`, and `Application` related requests.\n\nTo authorize an `Application` token, replace `organization_id` in this example with `application_id`\n\nTo authorize a `User` token, replace `organization_id` with `user_id`\n\nNeed help finding your organization id?\n\nRun the \"List organizations\" request in the Helper folder. This will automatically save id to your eco_organizationid collection variable.\n\n<img src=\"https://content.pstmn.io/fb9ecae9-0f07-4e2c-99d9-5da2b07f630f/aW1hZ2UucG5n\" alt=\"\" height=\"280\" width=\"870\">\n\nOr you can find by logging into the PRVD CLI\n\n<img src=\"https://content.pstmn.io/7d2115dd-a795-4465-95b7-ed1ab4193c57/aW1hZ2UucG5n\" width=\"764\" height=\"168\">\n\nOr find it in Shuttle with dev tools open\n\n<img src=\"https://content.pstmn.io/6a19c2c1-b62e-4c48-904b-1bd1a02679b4/aW1hZ2UucG5n\" width=\"647\" height=\"121\">"
+					},
+					"response": []
+				},
+				{
+					"name": "JWT Authenticate - Get access token from refresh token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.collectionVariables.set(\"eco_accesstoken\", response.access_token );",
+									"",
+									"pm.test(\"Permissions are 510\", function () {",
+									"    pm.expect(response.permissions).to.eql(510);",
+									"});",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_refreshtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"organization_id\": \"{{eco_organizationid}}\",\n    \"user_id\" : \"{{eco_user_id}}\"\n}"
+						},
+						"url": {
+							"raw": "https://ident.provide.services/api/v1/tokens",
+							"protocol": "https",
+							"host": [
+								"ident",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tokens"
+							]
+						},
+						"description": "Returns an authorized JSON formatted JWT with an `offline-access` scoped long-term `access_token` that serves as authentication for `User`, `Organization`, and `Application` related requests. \n\nTo authorize an `Application` token, replace `organization_id` in this example with `application_id`\n\nTo authorize a `User` token, replace `organization_id` with `user_id`"
+					},
+					"response": []
+				},
+				{
+					"name": "List workgroups",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bankshield_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://axiom.provide.services/api/v1/workgroups",
+							"protocol": "https",
+							"host": [
+								"axiom",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"workgroups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subject Accounts List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bankshield_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://axiom.provide.services/api/v1/subjects/{{eco_organizationid}}/accounts",
+							"protocol": "https",
+							"host": [
+								"axiom",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subjects",
+								"{{eco_organizationid}}",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "prvd auth - fetch token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"X-CSRF-Token is present\", function () {\r",
+									"    pm.response.to.have.header(\"X-CSRF-Token\");\r",
+									"    var xsrf = pm.response.headers.get(\"X-CSRF-Token\");\r",
+									"    pm.collectionVariables.set(\"xcsrftoken\", xsrf);\r",
+									"    //pm.setEnvironmentVariable('xcsrftoken', \"yah\");\r",
+									"    //get X-CSRF-Token and save it to variable\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{sapuser}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{sappassword}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "Fetch",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{sapbaseurl}}/sap/prvd/auth",
+							"host": [
+								"{{sapbaseurl}}"
+							],
+							"path": [
+								"sap",
+								"prvd",
+								"auth"
+							]
+						},
+						"description": "Given a set of SAP credentials, authenticates to SAP to retrieve an x-csrf-token. The xcsrftoken is later needed in the request header for POST and PUT REST API operations to SAP ."
+					},
+					"response": []
+				},
+				{
+					"name": "prvd tenants create (adds PRVD user to SAP S/4 HANA)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{sappassword}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{sapuser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{xcsrftoken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"organization_id\":\"{{eco_organizationid}}\", \"subject_account_id\" : \"{{eco_subjectacct}}\", \"workgroup_id\" : \"{{eco_workgroupid}}\", \"bpi_endpoint\":\"https://axiom.provide.services\",\"ident_endpoint\":\"https://ident.provide.services\",\"refresh_token\":\"{{eco_refreshtoken}}\"}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{sapbaseurl}}/sap/prvd/tenants",
+							"host": [
+								"{{sapbaseurl}}"
+							],
+							"path": [
+								"sap",
+								"prvd",
+								"tenants"
+							]
+						},
+						"description": "Creates a PRVD Subject Account configuration based on the payload of data provided\n\nxcsrftoken value required in the header - refer to the proUBC auth endpoint. Note: embedded Postman test scripts store this value following a successful call to the auth endpoint."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ZK Proofs",
+			"item": [
+				{
+					"name": "Proof of Emissions Offset",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"63759861A48B3466C80A967FA1080964F9C4E378560CC23B7BECCD862C247483\",\r\n    \"type\": \"AtomicOffset\",\r\n    \"subject_account_id\" : \"{{eco_subjectacct}}\",\r\n    \"workgroup_id\": \"{{eco_workgroupid}}\",\r\n    \"payload\": {\r\n        \"aggregate_id\" : \"AA|0017|20210918\",\r\n        \"retirement_id\" : \"095D52E14CFDF9455489453C6F7C5D90428331A3F92AB62EAB27F8C80C126B01\",\r\n        \"atomic_offset_id\" : \"63759861A48B3466C80A967FA1080964F9C4E378560CC23B7BECCD862C247483\",\r\n        \"object_type\" : \"SFLIGHT\",\r\n        \"object_key\" : \"AA|0017|20210918\",\r\n        \"sor_type\" : \"SAP\",\r\n        \"total_carbon_aggregate\" : 1.150000000,\r\n        \"carbon_uom\" : \"MT\",\r\n        \"network_id\" : \"4251b6fd-c98d-4017-87a3-d691a77a52a7\",\r\n        \"txn_hash\" : \"0x308354456d4a3d594a0dB0b154E1a52ed3312067\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://axiom.provide.services/api/v1/protocol_messages",
+							"protocol": "https",
+							"host": [
+								"axiom",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"protocol_messages"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "shuttle_email",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "shuttle_password",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "sapbaseurl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_accesstoken",
+			"value": ""
+		},
+		{
+			"key": "eco_user_id",
+			"value": ""
+		},
+		{
+			"key": "eco_organizationid",
+			"value": ""
+		},
+		{
+			"key": "eco_workgroupid",
+			"value": ""
+		},
+		{
+			"key": "xcsrftoken",
+			"value": ""
+		},
+		{
+			"key": "eco_subjectacct",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eco_refreshtoken",
+			"value": ""
+		}
+	]
+}

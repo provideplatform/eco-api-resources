@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "17e9c4eb-da2e-4209-aec2-dd6dc1415470",
 		"name": "Carbonmark API : Carbon Retirement with Carbonmark and Provide Payments",
-		"description": "# Carbon Retirement with Carbonmark API\n\n### Pre-requisites\n\nCreate an account on [https://shuttle.provide.services.](https://shuttle.provide.services.) Be sure to create an organization. Additional steps to create a workgroup are optional.\n\nMaintain the shuttle_email and shuttle_password collection variables for the account you set up in Shuttle accordingly\n\n### API Flow\n\nExecute each API request in the following order. The additional collection variables needed will be populated as you successfully complete each HTTP request\n\n1. **Setup**\n    1. Authorize Access Token via Basic Auth\n    2. List organizations\n    3. Generate long-dated token\n    4. Get access token from refresh token\n    5. List Vaults\n    6. Get Vault wallet details\n2. **Generate Retirement Transaction Parameters. Choose a request type that best fits your requirement**\n    1. Retire By Specific Carbon Project\n    2. Retire By Given Dollar Amount\n    3. General Retirement\n3. **Sign transaction with Vault**\n4. **Broadcast retirement transaction**\n    \n\nOnce the \"setup\" requests are completed once - you can simply execute you \"get access token from refresh token\" then reiterate steps 2-4. Note the usage of the long-dated refresh token to generate access tokens as a API authentication technique.\n\nUpon completion of the final request - go to the link specified in the eco_cert_href collection variable.\n\nIt should be a link like this:\n\n[https://carbonmark.com/en/retirements/0x9ba09b7F79ccE9D45026DD02851dFaC948515b07/2](https://klimadao.finance/en/retirements/0x9ba09b7F79ccE9D45026DD02851dFaC948515b07/2)\n\n### Variable Customization\n\nYou can try retiring from other carbon pools by changing the eco_pool_token variable to one of the following carbon offset tokens on Polygon. For project specific retirements - add the relevant address to the eco_project_token variable.\n\n| **Token** | **Address** |\n| --- | --- |\n| Toucan BCT (Base Carbon Tonne) | 0x2f800db0fdb5223b3c3f354886d907a671414a7f  <br>  <br>For individual projects - see addresses listed  <br>[https://carbon.klimadao.finance/bct](https://carbon.klimadao.finance/nboTroubleshooting) |\n| Toucan NCT (Nature-based Carbon Tonne) | 0xD838290e877E0188a4A44700463419ED96c16107  <br>  <br>For individual projects - see addresses listed  <br>[https://carbon.klimadao.finance/nct](https://carbon.klimadao.finance/nboTroubleshooting) |\n| Moss MCO2 | 0x3aF556B48469D2398AB7BE1563a0cfd80ea4aC84 |\n| C3 UBO (Universal Base Offset) | 0x2b3ecb0991af0498ece9135bcd04013d7993110c  <br>  <br>For individual projects - see addresses listed [https://carbon.klimadao.finance/](https://carbon.klimadao.finance/nbo)ubo |\n| C3 NBO (Nature Base Offset) | 0x6bca3b77c1909ce1a4ba1a20d1103bde8d222e48  <br>  <br>For individual projects - see addresses listed [https://carbon.klimadao.finance/nbo](https://carbon.klimadao.finance/nboTroubleshooting) |\n\n### Troubleshooting tips\n\n- Use jwt.io to inspect refresh and access tokens (e.g. variables begin like ey1930...) for any authorization / authentication errors\n- Make sure the permissions attribute is set to 510 when generating the refresh token. If 0 or something else, double check the organization id and user id combination\n- For any authorization errors, check the access token in the authorization tab\n- Postman can goof up environment / collection variables. Make sure correct values are populated\n- Unable to sign the transaction? Your user may be missing the secp256k1 key. Try creating a new Shuttle user (especially if your shuttle account is old!)\n- Other issues or questions? Please contact [ryan@provide.services](mailto:ryan@provide.services)",
+		"description": "# Carbon Retirement with Carbonmark API\n\n### Pre-requisites\n\nCreate an account on [https://shuttle.provide.services.]() Be sure to create an organization. Additional steps to create a workgroup are optional.\n\nMaintain the shuttle_email and shuttle_password collection variables for the account you set up in Shuttle accordingly\n\n### API Flow\n\nExecute each API request in the following order. The additional collection variables needed will be populated as you successfully complete each HTTP request\n\n1. **Setup**\n    1. Authorize Access Token via Basic Auth\n    2. List organizations\n    3. Generate long-dated token\n    4. Get access token from refresh token\n    5. List Vaults\n    6. Get Vault wallet details\n2. **Generate Retirement Transaction Parameters. Choose a request type that best fits your requirement**\n    1. Retire By Specific Carbon Project\n    2. Retire By Given Dollar Amount\n    3. General Retirement\n3. **Sign transaction with Vault**\n4. **Broadcast retirement transaction**\n    \n\nOnce the \"setup\" requests are completed once - you can simply execute you \"get access token from refresh token\" then reiterate steps 2-4. Note the usage of the long-dated refresh token to generate access tokens as a API authentication technique.\n\nUpon completion of the final request - go to the link specified in the eco_cert_href collection variable.\n\nIt should be a link like this:\n\n[https://carbonmark.com/en/retirements/0x9ba09b7F79ccE9D45026DD02851dFaC948515b07/2]()\n\n### Variable Customization\n\nYou can try retiring from other carbon pools by changing the eco_pool_token variable to one of the following carbon offset tokens on Polygon. For project specific retirements - add the relevant address to the eco_project_token variable.\n\n| **Token** | **Address** |\n| --- | --- |\n| Toucan BCT (Base Carbon Tonne) | 0x2f800db0fdb5223b3c3f354886d907a671414a7f  <br>  <br>For individual projects - see addresses listed  <br>[https://carbon.klimadao.finance/bct]() |\n| Toucan NCT (Nature-based Carbon Tonne) | 0xD838290e877E0188a4A44700463419ED96c16107  <br>  <br>For individual projects - see addresses listed  <br>[https://carbon.klimadao.finance/nct]() |\n| Moss MCO2 | 0x3aF556B48469D2398AB7BE1563a0cfd80ea4aC84 |\n| C3 UBO (Universal Base Offset) | 0x2b3ecb0991af0498ece9135bcd04013d7993110c  <br>  <br>For individual projects - see addresses listed [https://carbon.klimadao.finance/]()ubo |\n| C3 NBO (Nature Base Offset) | 0x6bca3b77c1909ce1a4ba1a20d1103bde8d222e48  <br>  <br>For individual projects - see addresses listed [https://carbon.klimadao.finance/nbo]() |\n\n### Troubleshooting tips\n\n- Use jwt.io to inspect refresh and access tokens (e.g. variables begin like ey1930...) for any authorization / authentication errors\n- Make sure the permissions attribute is set to 510 when generating the refresh token. If 0 or something else, double check the organization id and user id combination\n- For any authorization errors, check the access token in the authorization tab\n- Postman can goof up environment / collection variables. Make sure correct values are populated\n- Unable to sign the transaction? Your user may be missing the secp256k1 key. Try creating a new Shuttle user (especially if your shuttle account is old!)\n- Other issues or questions? Please contact [ryan@provide.services]()",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22975745"
 	},
@@ -51,7 +51,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"uncsam0705@provide.service\", \n    \"password\": \"{{shuttle_password}}\"\n}"
+							"raw": "{\n    \"email\": \"{{}shuttle_email}}\", \n    \"password\": \"{{shuttle_password}}\"\n}"
 						},
 						"url": {
 							"raw": "https://ident.provide.services/api/v1/authenticate",
@@ -334,6 +334,7 @@
 									"const response = pm.response.json();\r",
 									"\r",
 									"var key_id;\r",
+									"var encrypt_key_id;\r",
 									"var wallet;\r",
 									"\r",
 									"var vaultkeys = response.filter( vaultkeys => vaultkeys.spec === \"secp256k1\" );\r",
@@ -349,6 +350,14 @@
 									"\r",
 									"pm.collectionVariables.set(\"eco_uservault_key_id\", key_id );\r",
 									"pm.collectionVariables.set(\"eco_uservault_wallet\", wallet);\r",
+									"\r",
+									"var encrypt_vaultkeys = response.filter( vaultkeys => vaultkeys.spec === \"AES-256-GCM\" );\r",
+									"\r",
+									"if(encrypt_vaultkeys.length > 0) {\r",
+									"encrypt_key_id = encrypt_vaultkeys[0].id;\r",
+									"}\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_uservault_encrypt_key_id\", encrypt_key_id );\r",
 									"\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -444,7 +453,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"value\"   : 0.0233,\r\n    \"max_source_bid\" : 0.11,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"project_token_contract_address\" : \"{{eco_project_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\",\r\n    \"retire_by\" : \"carbon\"\r\n}",
+							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"value\"   : 0.006,\r\n    \"max_source_bid\" : 1.00,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"project_token_contract_address\" : \"{{eco_project_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\",\r\n    \"retire_by\" : \"carbon\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -656,7 +665,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"value\"   : 0.06,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\",\r\n    \"retire_by\" : \"source\"\r\n}",
+							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"value\"   : 0.25,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\",\r\n    \"retire_by\" : \"source\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -894,6 +903,147 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Encrypt Retirement Message",
+			"item": [
+				{
+					"name": "Encrypt the Retirement Message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"var encrypted_msg;\r",
+									"\r",
+									"encrypted_msg = response.data;\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_encrypted_msg\", encrypted_msg);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\" : \"apple bottom JEANS boot with the FUR\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys/{{eco_uservault_encrypt_key_id}}/encrypt",
+							"protocol": "https",
+							"host": [
+								"vault",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"vaults",
+								"{{eco_uservault_id}}",
+								"keys",
+								"{{eco_uservault_encrypt_key_id}}",
+								"encrypt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Decrypt the Retirement Message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"var signeddata;\r",
+									"\r",
+									"signeddata = response.signature;\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_signeddata\", signeddata);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\" : \"{{eco_encrypted_msg}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys/{{eco_uservault_encrypt_key_id}}/decrypt",
+							"protocol": "https",
+							"host": [
+								"vault",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"vaults",
+								"{{eco_uservault_id}}",
+								"keys",
+								"{{eco_uservault_encrypt_key_id}}",
+								"decrypt"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search marketplace",
+			"item": []
 		},
 		{
 			"name": "Sign transaction with Vault",
@@ -1148,8 +1298,17 @@
 		},
 		{
 			"key": "eco_project_token",
+			"value": "0x225b28c1a77fd4493196db19c538a44801243537",
+			"type": "string"
+		},
+		{
+			"key": "eco_uservault_encrypt_key_id",
 			"value": "",
 			"type": "string"
+		},
+		{
+			"key": "eco_encrypted_msg",
+			"value": ""
 		}
 	]
 }
