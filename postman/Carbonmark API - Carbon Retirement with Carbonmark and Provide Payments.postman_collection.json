@@ -335,13 +335,10 @@
 									"\r",
 									"var key_id;\r",
 									"var encrypt_key_id;\r",
+									"var rsa_key_id;\r",
 									"var wallet;\r",
 									"\r",
 									"var vaultkeys = response.filter( vaultkeys => vaultkeys.spec === \"secp256k1\" );\r",
-									"\r",
-									"pm.test(\"Have a key for EVM\", function () {\r",
-									"    vaultkeys.to.have.length > 0;\r",
-									"});\r",
 									"\r",
 									"if(vaultkeys.length > 0) {\r",
 									"key_id = vaultkeys[0].id;\r",
@@ -361,7 +358,15 @@
 									"\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
-									"});"
+									"});\r",
+									"\r",
+									"var rsa_vaultkeys = response.filter( vaultkeys => vaultkeys.spec === \"RSA-4096\");\r",
+									"\r",
+									"if(rsa_vaultkeys.length > 0) {\r",
+									"rsa_key_id = rsa_vaultkeys[0].id;\r",
+									"}\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_uservault_rsa_key_id\", rsa_key_id );"
 								],
 								"type": "text/javascript"
 							}
@@ -399,6 +404,573 @@
 								"vaults",
 								"{{eco_uservault_id}}",
 								"keys"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search Carbonmark marketplace",
+			"item": [
+				{
+					"name": "getCategories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"        pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{carbonmark_url}}/api/categories",
+							"host": [
+								"{{carbonmark_url}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCountries",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"        pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{carbonmark_url}}/api/countries",
+							"host": [
+								"{{carbonmark_url}}"
+							],
+							"path": [
+								"api",
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getVintages",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"        pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{carbonmark_url}}/api/vintages",
+							"host": [
+								"{{carbonmark_url}}"
+							],
+							"path": [
+								"api",
+								"vintages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPurchases",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"        pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{carbonmark_url}}/api/purchases/:purchaseId",
+							"host": [
+								"{{carbonmark_url}}"
+							],
+							"path": [
+								"api",
+								"purchases",
+								":purchaseId"
+							],
+							"variable": [
+								{
+									"key": "purchaseId",
+									"value": "0xf29982b8a9aae457640fba31eaacc694868167c11b6d6e7ac9dd5e06e3405b14"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllProjects",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"        pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{carbonmark_url}}/api/projects?search=Dayingjiang&vintage=2008",
+							"host": [
+								"{{carbonmark_url}}"
+							],
+							"path": [
+								"api",
+								"projects"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "Dayingjiang"
+								},
+								{
+									"key": "vintage",
+									"value": "2008"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getProjectById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"        pm.response.to.have.status(200);",
+									"})",
+									"",
+									"const response = pm.response.json();",
+									"var project_prices = response.prices;",
+									"",
+									"var pool_token = project_prices[0].poolAddress;",
+									"var project_token = project_prices[0].projectTokenAddress;",
+									"",
+									"pm.collectionVariables.set(\"eco_pool_token\", pool_token);",
+									"pm.collectionVariables.set(\"eco_project_token\", project_token);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{carbonmark_url}}/api/projects/:id",
+							"host": [
+								"{{carbonmark_url}}"
+							],
+							"path": [
+								"api",
+								"projects",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "VCS-191-2008"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserByWallet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"        pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{carbonmark_url}}/api/users/:walletid?type=wallet",
+							"host": [
+								"{{carbonmark_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":walletid"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "wallet"
+								}
+							],
+							"variable": [
+								{
+									"key": "walletid",
+									"value": "0X4E78011CE80EE02D2C3E649FB657E45898257815"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Retirement Message Encryption, RSA Digital signature",
+			"item": [
+				{
+					"name": "Encrypt the Retirement Message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"var encrypted_msg;\r",
+									"\r",
+									"encrypted_msg = response.data;\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_encrypted_msg\", encrypted_msg);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\" : \"apple bottom JEANS boot with the FUR\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys/{{eco_uservault_encrypt_key_id}}/encrypt",
+							"protocol": "https",
+							"host": [
+								"vault",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"vaults",
+								"{{eco_uservault_id}}",
+								"keys",
+								"{{eco_uservault_encrypt_key_id}}",
+								"encrypt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Decrypt the Retirement Message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"var signeddata;\r",
+									"\r",
+									"signeddata = response.signature;\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_signeddata\", signeddata);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\" : \"{{eco_encrypted_msg}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys/{{eco_uservault_encrypt_key_id}}/decrypt",
+							"protocol": "https",
+							"host": [
+								"vault",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"vaults",
+								"{{eco_uservault_id}}",
+								"keys",
+								"{{eco_uservault_encrypt_key_id}}",
+								"decrypt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign the retirement message with RSA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"var encrypted_msg;\r",
+									"\r",
+									"rsa_msg = response.signature;\r",
+									"\r",
+									"pm.collectionVariables.set(\"eco_rsa_msg\", rsa_msg);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var message = \"apple bottom JEANZ\";\r",
+									"encodedmsg = Buffer.from(message).toString('hex');\r",
+									"pm.collectionVariables.set(\"eco_encoded_msg\", encodedmsg);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\" : \"{{eco_encoded_msg}}\",\r\n    \"options\": {\r\n      \"algorithm\": \"PS512\"\r\n    } \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys/{{eco_uservault_rsa_key_id}}/sign",
+							"protocol": "https",
+							"host": [
+								"vault",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"vaults",
+								"{{eco_uservault_id}}",
+								"keys",
+								"{{eco_uservault_rsa_key_id}}",
+								"sign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify the RSA signed message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\" : \"{{eco_encoded_msg}}\",\r\n    \"signature\" : \"{{eco_rsa_msg}}\",\r\n    \"options\": {\r\n      \"algorithm\": \"PS512\"\r\n    } \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys/{{eco_uservault_rsa_key_id}}/verify",
+							"protocol": "https",
+							"host": [
+								"vault",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"vaults",
+								"{{eco_uservault_id}}",
+								"keys",
+								"{{eco_uservault_rsa_key_id}}",
+								"verify"
 							]
 						}
 					},
@@ -905,147 +1477,6 @@
 			]
 		},
 		{
-			"name": "Encrypt Retirement Message",
-			"item": [
-				{
-					"name": "Encrypt the Retirement Message",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"var encrypted_msg;\r",
-									"\r",
-									"encrypted_msg = response.data;\r",
-									"\r",
-									"pm.collectionVariables.set(\"eco_encrypted_msg\", encrypted_msg);\r",
-									"\r",
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{eco_accesstoken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"data\" : \"apple bottom JEANS boot with the FUR\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys/{{eco_uservault_encrypt_key_id}}/encrypt",
-							"protocol": "https",
-							"host": [
-								"vault",
-								"provide",
-								"services"
-							],
-							"path": [
-								"api",
-								"v1",
-								"vaults",
-								"{{eco_uservault_id}}",
-								"keys",
-								"{{eco_uservault_encrypt_key_id}}",
-								"encrypt"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Decrypt the Retirement Message",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"var signeddata;\r",
-									"\r",
-									"signeddata = response.signature;\r",
-									"\r",
-									"pm.collectionVariables.set(\"eco_signeddata\", signeddata);\r",
-									"\r",
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{eco_accesstoken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"data\" : \"{{eco_encrypted_msg}}\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://vault.provide.services/api/v1/vaults/{{eco_uservault_id}}/keys/{{eco_uservault_encrypt_key_id}}/decrypt",
-							"protocol": "https",
-							"host": [
-								"vault",
-								"provide",
-								"services"
-							],
-							"path": [
-								"api",
-								"v1",
-								"vaults",
-								"{{eco_uservault_id}}",
-								"keys",
-								"{{eco_uservault_encrypt_key_id}}",
-								"decrypt"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Search marketplace",
-			"item": []
-		},
-		{
 			"name": "Sign transaction with Vault",
 			"event": [
 				{
@@ -1308,6 +1739,23 @@
 		},
 		{
 			"key": "eco_encrypted_msg",
+			"value": ""
+		},
+		{
+			"key": "carbonmark_url",
+			"value": "https://api.carbonmark.com",
+			"type": "string"
+		},
+		{
+			"key": "eco_uservault_rsa_key_id",
+			"value": ""
+		},
+		{
+			"key": "eco_rsa_msg",
+			"value": ""
+		},
+		{
+			"key": "eco_encoded_msg",
 			"value": ""
 		}
 	]
