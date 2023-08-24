@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "31eaee26-efaa-42e3-9f8e-77f3d689549a",
-		"name": "ECO API - User signup",
+		"_postman_id": "e71f1797-3e1e-47ab-a054-1a2c9abb4ea4",
+		"name": "Carbonmark API - Provide Payments User signup",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22975745"
 	},
@@ -145,7 +145,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{eco_signup_session_accesstoken}}",
+							"value": "{{eco_signup_temp_accesstoken}}",
 							"type": "string"
 						}
 					]
@@ -168,7 +168,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{eco_signup_orgname}}\",\n    \"description\": \"{{eco_signup_orgdesc}}\"\n\n}"
+					"raw": "{\n    \"name\": \"{{eco_signup_orgname}}\",\n    \"description\": \"{{eco_signup_orgdesc}}\"\n}"
 				},
 				"url": {
 					"raw": "https://ident.provide.services/api/v1/organizations",
@@ -297,7 +297,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Vault wallet details Copy",
+			"name": "Get Vault wallet details",
 			"event": [
 				{
 					"listen": "test",
@@ -417,7 +417,7 @@
 			"response": []
 		},
 		{
-			"name": "Create a key: secp256k1 Copy",
+			"name": "Create a key: secp256k1",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -464,7 +464,7 @@
 			"response": []
 		},
 		{
-			"name": "Create a key: AES-256-GCM Copy",
+			"name": "Create a key: AES-256-GCM",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -511,7 +511,7 @@
 			"response": []
 		},
 		{
-			"name": "Create a key: Baby Jubjub Copy",
+			"name": "Create a key: Baby Jubjub",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -558,7 +558,7 @@
 			"response": []
 		},
 		{
-			"name": "Create a key: RSA-4096 Copy",
+			"name": "Create a key: RSA-4096",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -638,12 +638,12 @@
 		},
 		{
 			"key": "eco_signup_email",
-			"value": "",
+			"value": "test0822@provide.services",
 			"type": "string"
 		},
 		{
 			"key": "eco_signup_password",
-			"value": "",
+			"value": "test123AB",
 			"type": "string"
 		},
 		{
@@ -653,12 +653,12 @@
 		},
 		{
 			"key": "eco_signup_orgname",
-			"value": "",
+			"value": "test0822",
 			"type": "string"
 		},
 		{
 			"key": "eco_signup_orgdesc",
-			"value": "",
+			"value": "test 0822",
 			"type": "string"
 		},
 		{
@@ -678,7 +678,7 @@
 		},
 		{
 			"key": "eco_signup_userid",
-			"value": "",
+			"value": "c21c19c8-60ae-475c-971b-bc72cb510a6e",
 			"type": "string"
 		},
 		{
