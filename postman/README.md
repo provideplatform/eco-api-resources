@@ -45,7 +45,7 @@ You can try retiring from other carbon pools by changing the eco_pool_token vari
 
 | **Token** | **Address** | **Project Token** |
 | --- | --- | --- |
-| Toucan BCT (Base Carbon Tonne) | 0x2f800db0fdb5223b3c3f354886d907a671414a7f | | See addresses listed [https://carbon.klimadao.finance/bct](https://carbon.klimadao.finance/bct) |
+| Toucan BCT (Base Carbon Tonne) | 0x2f800db0fdb5223b3c3f354886d907a671414a7f | See addresses listed [https://carbon.klimadao.finance/bct](https://carbon.klimadao.finance/bct) |
 | Toucan NCT (Nature-based Carbon Tonne) | 0xD838290e877E0188a4A44700463419ED96c16107 | See addresses listed [https://carbon.klimadao.finance/nct](https://carbon.klimadao.finance/nct) |
 | Moss MCO2 | 0x3aF556B48469D2398AB7BE1563a0cfd80ea4aC84 |  See addresses listed [https://carbon.klimadao.finance/nbo](https://carbon.klimadao.finance/nbo) |
 | C3 UBO (Universal Base Offset) | 0x2b3ecb0991af0498ece9135bcd04013d7993110c | See addresses listed [https://carbon.klimadao.finance/](https://carbon.klimadao.finance/ubo) |
@@ -55,13 +55,17 @@ You can try retiring from other carbon pools by changing the eco_pool_token vari
 
 #### Carbonmark marketplace search
 
+Browse, filter, and navigate the Carbonmark digital carbon marketplace using the Carbonmark API.
+
+You can search under criteria such as: category,country, vintage, purchase history, registry, pool name and more! See additional details [here](https://github.com/KlimaDAO/klimadao/tree/staging/carbonmark-api).
+
 #### Retirement message encryption, RSA verification, zero knowledge proofs
 
 Important consideration : the retirement message you include is visible to everyone and is also <i>immutable</i> meaning it can't be deleted or modified later. But can also still be very useful for integrating your public carbon accounting and scope 3 emissions verifications when used correctly.
 
 Thankfully - the Provide platform includes additional details for protecting the privacy of your data. You can easily try encrypting your retirement message or use RSA digital signatures to prove/verify the data in the retirement message (or anything else too!).
 
-As
+Additional advanced cryptography capabilities in zero knowledge are available as well. Find more details in the  [advanced onboarding section](../auth/eco-api-shuttle-onboarding.md#advanced-onboarding) about Shuttle.
 
 ### Troubleshooting tips
 

@@ -15,7 +15,7 @@ Several methods to set your credentials are avaiable
 | Sign up method | Link |
 | -------------- | ---- |
 | Carbonmark     | Coming soon |
-| Postman | [Click Here](./postman/ECO%20API%20-%20User%20signup.postman_collection.json) |
+| Postman | [Click Here](./postman/README.md) |
 | Shuttle | [Click Here](./auth/eco-api-shuttle-onboarding.md) |
 | PRVD CLI | Coming soon |
 
@@ -24,7 +24,7 @@ Several methods to set your credentials are avaiable
 
 Ready to start retiring carbon on-demand? After creating your API credentials - you can complete your first carbon retirement through the ECO API Postman starter kit. 
 
-Download and try the Provide ECO API Postman Starter Kit - Carbon Retirement with Carbonmark [here](./postman/ECO%20API%20Starter%20-%20Carbon%20Retirement%20with%20Carbonmark.postman_collection.json)
+Download and try the Provide ECO API Postman Starter Kit - Carbon Retirement with Carbonmark [here](./postman/Carbonmark%20API%20-%20Carbon%20Retirement%20with%20Carbonmark%20and%20Provide%20Payments.postman_collection.json)
 
 ### Execute an on-demand carbon retirement on Carbonmark, Polygon Network via Node.js
 
