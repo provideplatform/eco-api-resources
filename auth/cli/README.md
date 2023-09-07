@@ -34,6 +34,19 @@ Create the key for the Polygon Matic wallet address to be used for carbon retire
 
 Create the remaining keys needed for Provide customer operations support
 
-6. Generate the refresh token
+RSA
+```prvd vaults keys init --organization <<your organization id here>> --name my rsa key --spec secp256k1 --description my rsa key --usage sign/verify --type asymmetric --application ```
 
-7. Do a retirement via Curl
+AES
+```prvd vaults keys init --organization <<your organization id here>> --name my aes encryption key --spec secp256k1 --description my aes encryption key --usage sign/verify --type asymmetric --application ```
+
+BabyJubJub
+```prvd vaults keys init --organization <<your organization id here>> --name my bjj zk key --spec secp256k1 --description my bjj zk key --usage sign/verify --type asymmetric --application ``
+
+6. Generate the refresh token and save it to a text file locally
+
+```prvd api_tokens init --organization <<your organization id here>> --offline-access > myrefreshtoken.txt```
+
+7. Do a carbon retirement from the staging pool via Curl
+
+todo
