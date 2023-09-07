@@ -638,12 +638,12 @@
 		},
 		{
 			"key": "eco_signup_email",
-			"value": "test0822@provide.services",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "eco_signup_password",
-			"value": "test123AB",
+			"value": "",
 			"type": "string"
 		},
 		{
@@ -653,12 +653,12 @@
 		},
 		{
 			"key": "eco_signup_orgname",
-			"value": "test0822",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "eco_signup_orgdesc",
-			"value": "test 0822",
+			"value": "",
 			"type": "string"
 		},
 		{
@@ -678,7 +678,7 @@
 		},
 		{
 			"key": "eco_signup_userid",
-			"value": "c21c19c8-60ae-475c-971b-bc72cb510a6e",
+			"value": "",
 			"type": "string"
 		},
 		{
