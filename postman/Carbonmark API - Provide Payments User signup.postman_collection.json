@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e71f1797-3e1e-47ab-a054-1a2c9abb4ea4",
+		"_postman_id": "507c9e39-f15c-48f8-b802-0bb832d5c51e",
 		"name": "Carbonmark API - Provide Payments User signup",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "22975745"
+		"_exporter_id": "15160056"
 	},
 	"item": [
 		{
@@ -442,7 +442,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n      \"type\": \"asymmetric\",\n      \"usage\": \"sign/verify\",\n      \"spec\": \"RSA-2048\",\n      \"name\": \"rsa key #1\",\n      \"description\": \"JWT Signing Key #1\"\n    }"
+					"raw": "{\n      \"type\": \"asymmetric\",\n      \"usage\": \"sign/verify\",\n      \"spec\": \"secp256k1\",\n      \"name\": \"Polygon\",\n      \"description\": \"My Polygon address #1\"\n    }"
 				},
 				"url": {
 					"raw": "https://vault.provide.services/api/v1/vaults/{{eco_signup_vaultid}}/keys",
@@ -638,12 +638,12 @@
 		},
 		{
 			"key": "eco_signup_email",
-			"value": "test0822@provide.services",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "eco_signup_password",
-			"value": "test123AB",
+			"value": "",
 			"type": "string"
 		},
 		{
@@ -653,12 +653,12 @@
 		},
 		{
 			"key": "eco_signup_orgname",
-			"value": "test0822",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "eco_signup_orgdesc",
-			"value": "test 0822",
+			"value": "",
 			"type": "string"
 		},
 		{
@@ -678,11 +678,15 @@
 		},
 		{
 			"key": "eco_signup_userid",
-			"value": "c21c19c8-60ae-475c-971b-bc72cb510a6e",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "eco_uservault_id",
+			"value": ""
+		},
+		{
+			"key": "eco_signup_user_wallet",
 			"value": ""
 		}
 	]
