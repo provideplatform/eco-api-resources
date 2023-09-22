@@ -23,5 +23,5 @@ Spot rate customers are offered net 30 payment terms and can pay by wire transfe
 
 
 ## On blockchain usage
-While cryptocurrencies are used to pay gas fees and acquire/retire carbon, individual ECO API users are nver required to hold any digital assets. A technique known as account abstraction enables the ECO API to pay fees on the user's behalf. This enables the ECO to conduct transcations and monitor usage for billing.
+While cryptocurrencies are used to pay gas fees and acquire/retire carbon, individual ECO API users are never required to hold any digital assets. A technique known as account abstraction enables the ECO API to pay fees on the user's behalf. This enables the ECO to conduct transcations and monitor usage for billing.
 
