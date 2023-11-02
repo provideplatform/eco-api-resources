@@ -412,6 +412,123 @@
 			]
 		},
 		{
+			"name": "Login Via Basic Auth",
+			"item": [
+				{
+					"name": "Login with basic auth Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"console.log(response);",
+									"",
+									"//pm.collectionVariables.set(\"eco_refreshtoken\", response.token.refresh_token), (\"user_id\", response.user.id);",
+									"pm.collectionVariables.set(\"eco_temp_accesstoken\", response.token.access_token), (\"eco_userid\", response.user.id);",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{shuttle_email}}\", \n    \"password\": \"{{shuttle_password}}\"\n}"
+						},
+						"url": {
+							"raw": "https://ident.provide.services/api/v1/authenticate",
+							"protocol": "https",
+							"host": [
+								"ident",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authenticate"
+							]
+						},
+						"description": "Sends email & password to Ident. Token is retrieved and stored in environment variables as jwt_token"
+					},
+					"response": []
+				},
+				{
+					"name": "Get session access token for Org from basic auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.collectionVariables.set(\"eco_accesstoken\", response.access_token );"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_signup_temp_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"organization_id\": \"{{eco_organizationid}}\",\n    \"user_id\" : \"{{eco_user_id}}\"\n}"
+						},
+						"url": {
+							"raw": "https://ident.provide.services/api/v1/tokens",
+							"protocol": "https",
+							"host": [
+								"ident",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tokens"
+							]
+						},
+						"description": "Returns an authorized JSON formatted JWT with an `offline-access` scoped long-term `access_token` that serves as authentication for `User`, `Organization`, and `Application` related requests. \n\nTo authorize an `Application` token, replace `organization_id` in this example with `application_id`\n\nTo authorize a `User` token, replace `organization_id` with `user_id`"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Search Carbonmark marketplace",
 			"item": [
 				{
@@ -1025,7 +1142,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"value\"   : 0.006,\r\n    \"max_source_bid\" : 1.00,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"project_token_contract_address\" : \"{{eco_project_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\",\r\n    \"retire_by\" : \"carbon\"\r\n}",
+							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"value\"   : 0.009,\r\n    \"max_source_bid\" : 1.00,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"project_token_contract_address\" : \"{{eco_project_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\",\r\n    \"retire_by\" : \"carbon\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1756,6 +1873,10 @@
 		},
 		{
 			"key": "eco_encoded_msg",
+			"value": ""
+		},
+		{
+			"key": "eco_temp_accesstoken",
 			"value": ""
 		}
 	]
