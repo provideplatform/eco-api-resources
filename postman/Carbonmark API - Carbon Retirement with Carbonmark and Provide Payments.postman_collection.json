@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "17e9c4eb-da2e-4209-aec2-dd6dc1415470",
+		"_postman_id": "50800270-1e58-4e44-9940-62df78d4120d",
 		"name": "Carbonmark API : Carbon Retirement with Carbonmark and Provide Payments",
 		"description": "# Carbon Retirement with Carbonmark API\n\n### Pre-requisites\n\nCreate an account on [https://shuttle.provide.services.]() Be sure to create an organization. Additional steps to create a workgroup are optional.\n\nMaintain the shuttle_email and shuttle_password collection variables for the account you set up in Shuttle accordingly\n\n### API Flow\n\nExecute each API request in the following order. The additional collection variables needed will be populated as you successfully complete each HTTP request\n\n1. **Setup**\n    1. Authorize Access Token via Basic Auth\n    2. List organizations\n    3. Generate long-dated token\n    4. Get access token from refresh token\n    5. List Vaults\n    6. Get Vault wallet details\n2. **Generate Retirement Transaction Parameters. Choose a request type that best fits your requirement**\n    1. Retire By Specific Carbon Project\n    2. Retire By Given Dollar Amount\n    3. General Retirement\n3. **Sign transaction with Vault**\n4. **Broadcast retirement transaction**\n    \n\nOnce the \"setup\" requests are completed once - you can simply execute you \"get access token from refresh token\" then reiterate steps 2-4. Note the usage of the long-dated refresh token to generate access tokens as a API authentication technique.\n\nUpon completion of the final request - go to the link specified in the eco_cert_href collection variable.\n\nIt should be a link like this:\n\n[https://carbonmark.com/en/retirements/0x9ba09b7F79ccE9D45026DD02851dFaC948515b07/2]()\n\n### Variable Customization\n\nYou can try retiring from other carbon pools by changing the eco_pool_token variable to one of the following carbon offset tokens on Polygon. For project specific retirements - add the relevant address to the eco_project_token variable.\n\n| **Token** | **Address** |\n| --- | --- |\n| Toucan BCT (Base Carbon Tonne) | 0x2f800db0fdb5223b3c3f354886d907a671414a7f  <br>  <br>For individual projects - see addresses listed  <br>[https://carbon.klimadao.finance/bct]() |\n| Toucan NCT (Nature-based Carbon Tonne) | 0xD838290e877E0188a4A44700463419ED96c16107  <br>  <br>For individual projects - see addresses listed  <br>[https://carbon.klimadao.finance/nct]() |\n| Moss MCO2 | 0x3aF556B48469D2398AB7BE1563a0cfd80ea4aC84 |\n| C3 UBO (Universal Base Offset) | 0x2b3ecb0991af0498ece9135bcd04013d7993110c  <br>  <br>For individual projects - see addresses listed [https://carbon.klimadao.finance/]()ubo |\n| C3 NBO (Nature Base Offset) | 0x6bca3b77c1909ce1a4ba1a20d1103bde8d222e48  <br>  <br>For individual projects - see addresses listed [https://carbon.klimadao.finance/nbo]() |\n\n### Troubleshooting tips\n\n- Use jwt.io to inspect refresh and access tokens (e.g. variables begin like ey1930...) for any authorization / authentication errors\n- Make sure the permissions attribute is set to 510 when generating the refresh token. If 0 or something else, double check the organization id and user id combination\n- For any authorization errors, check the access token in the authorization tab\n- Postman can goof up environment / collection variables. Make sure correct values are populated\n- Unable to sign the transaction? Your user may be missing the secp256k1 key. Try creating a new Shuttle user (especially if your shuttle account is old!)\n- Other issues or questions? Please contact [ryan@provide.services]()",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "22975745"
+		"_exporter_id": "15160056"
 	},
 	"item": [
 		{
@@ -51,7 +51,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"{{}shuttle_email}}\", \n    \"password\": \"{{shuttle_password}}\"\n}"
+							"raw": "{\n    \"email\": \"{{shuttle_email}}\", \n    \"password\": \"{{shuttle_password}}\"\n}"
 						},
 						"url": {
 							"raw": "https://ident.provide.services/api/v1/authenticate",
@@ -406,6 +406,123 @@
 								"keys"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login Via Basic Auth",
+			"item": [
+				{
+					"name": "Login with basic auth Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"console.log(response);",
+									"",
+									"//pm.collectionVariables.set(\"eco_refreshtoken\", response.token.refresh_token), (\"user_id\", response.user.id);",
+									"pm.collectionVariables.set(\"eco_temp_accesstoken\", response.token.access_token), (\"eco_userid\", response.user.id);",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{shuttle_email}}\", \n    \"password\": \"{{shuttle_password}}\"\n}"
+						},
+						"url": {
+							"raw": "https://ident.provide.services/api/v1/authenticate",
+							"protocol": "https",
+							"host": [
+								"ident",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authenticate"
+							]
+						},
+						"description": "Sends email & password to Ident. Token is retrieved and stored in environment variables as jwt_token"
+					},
+					"response": []
+				},
+				{
+					"name": "Get session access token for Org from basic auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.collectionVariables.set(\"eco_accesstoken\", response.access_token );"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{eco_signup_temp_accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"organization_id\": \"{{eco_organizationid}}\",\n    \"user_id\" : \"{{eco_user_id}}\"\n}"
+						},
+						"url": {
+							"raw": "https://ident.provide.services/api/v1/tokens",
+							"protocol": "https",
+							"host": [
+								"ident",
+								"provide",
+								"services"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tokens"
+							]
+						},
+						"description": "Returns an authorized JSON formatted JWT with an `offline-access` scoped long-term `access_token` that serves as authentication for `User`, `Organization`, and `Application` related requests. \n\nTo authorize an `Application` token, replace `organization_id` in this example with `application_id`\n\nTo authorize a `User` token, replace `organization_id` with `user_id`"
 					},
 					"response": []
 				}
@@ -1025,7 +1142,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"value\"   : 0.006,\r\n    \"max_source_bid\" : 1.00,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"project_token_contract_address\" : \"{{eco_project_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\",\r\n    \"retire_by\" : \"carbon\"\r\n}",
+							"raw": "{\r\n    \"network_id\" : \"{{eco_prvd_network_id}}\",\r\n    \"description\" : \"{{eco_retirement_desc}}\",                   \r\n    \"value\"   : 0.009,\r\n    \"max_source_bid\" : 1.00,\r\n    \"source_token_contract_address\" : \"{{eco_source_token}}\",\r\n    \"pool_token_contract_address\"  : \"{{eco_pool_token}}\",\r\n    \"project_token_contract_address\" : \"{{eco_project_token}}\",\r\n    \"beneficiary_address\" : \"{{eco_uservault_wallet}}\",\r\n    \"beneficiary_name\" : \"{{eco_beneficiary}}\",\r\n    \"retirement_message\" : \"{{eco_retirement_msg}}\",\r\n    \"retire_by\" : \"carbon\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1756,6 +1873,10 @@
 		},
 		{
 			"key": "eco_encoded_msg",
+			"value": ""
+		},
+		{
+			"key": "eco_temp_accesstoken",
 			"value": ""
 		}
 	]

@@ -1,24 +1,41 @@
 # Carbon Retirement with Carbonmark - Postman walkthrough
 
-### Pre-requisites
+### Pre-requisite - Create Credentials
 
 Create an account on [https://shuttle.provide.services.](https://shuttle.provide.services.)
 
 Check out a video on how to do this here. Review step by step instructions [here](../auth/eco-api-shuttle-onboarding.md).
 
-Maintain the ```shuttle_email``` and ```shuttle_password``` collection variables for the account you set up in Shuttle accordingly in Postman.
+Altenately - you can generate credentials direcly from the API. You can learn more about this [here](../auth/)
+
+Maintain the ```shuttle_email``` and ```shuttle_password``` collection variables for the account you set up in Shuttle or via API accordingly in Postman.
 
 ### API Flow
 
-For first time setup - Execute each API request in the following order
+For first time setup - Execute each API request in the following order. Using a long-dated refresh token is the preferred option, though basic authentication is supported as well.
 
-1. **Setup**
+1. **Refresh Token Setup**
     1. Authorize Access Token via Basic Auth
     2. List organizations
     3. Generate long-dated token
     4. Get access token from refresh token
     5. List Vaults
     6. Get Vault wallet details
+2. **Generate Retirement Transaction Parameters. Choose a request type that best fits your requirement**
+    1. Retire By Specific Carbon Project
+    2. Retire By Given Dollar Amount
+    3. General Retirement
+3. **Sign transaction with Vault**
+4. **Broadcast retirement transaction**
+
+<b>API Flow with Basic Auth</b>
+If you'd rather use basic authentication than a refresh token to connect to the API, simply modify your process flow as follows
+
+1. **Login Via Basic Auth Setup**
+    1. Login with Basic Auth
+    2. Get session access token for Org from basic auth
+    3. List Vaults
+    4. Get Vault wallet details
 2. **Generate Retirement Transaction Parameters. Choose a request type that best fits your requirement**
     1. Retire By Specific Carbon Project
     2. Retire By Given Dollar Amount
